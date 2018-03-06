@@ -7,8 +7,6 @@ include 'panel/panel.php';
 include 'panel/panelmodel.php';
 ?>
 
-<html>
-
 		<?php
 		session_start();
 		
@@ -17,13 +15,13 @@ include 'panel/panelmodel.php';
 			if(isset($_POST["action"])) {
 				switch($_POST["action"]) {
 					case 'login':
-						$password = $_POST["password"]; //TODO: hashear $_POST["password"]
 						$db = new DB();
-						$result = $db->checkUser($_POST["email"],$password);
+						$result = $db->checkUser($_POST["email"],$_POST["passwordHash"]);
 						switch($result) {
 							case "success":
 								$_SESSION["email"] = $_POST["email"];
-								$_SESSION["password"] = $password;
+								$_SESSION["password"] = $_POST["passwordHash"];
+								$_SESSION["userObjectId"] = $db->getOID($_POST["email"],$_POST["passwordHash"]);
 								header("Location: ./");
 								break;
 								
@@ -31,6 +29,7 @@ include 'panel/panelmodel.php';
 								header("Location: ./?action=".$_POST["action"]."&result=".$result);
 								exit();
 								break;
+
 						}
 						break;
 						
@@ -102,10 +101,10 @@ include 'panel/panelmodel.php';
 		//Si hay sesión
 		else {
 			//Logout
-			if(isset($_POST["action"]) && $_POST["action"] == "logout") {
+			if(isset($_GET["action"]) && $_GET["action"] == "logout") {
 				session_destroy();
 				new Login("success","Sesión cerrada");
-			}			
+			}
 
 			//Funcionamiento normal
 			else {
@@ -143,13 +142,13 @@ include 'panel/panelmodel.php';
 						//Si no, comprobar si viene por GET
 						if(isset($_GET["action"])) {
 							$panelModel = new PanelModel();
-							new Panel($_SESSION["password"],$panelModel->checkFolder($_SESSION["password"]),array("action"=>$_GET["action"],"status"=>$_GET["status"]));				
+							new Panel($_SESSION["userObjectId"],$panelModel->checkFolder($_SESSION["userObjectId"]),array("action"=>$_GET["action"],"status"=>$_GET["status"]));				
 						}
 						
 						//Si no, mostrar panel
 						else {
 							$panelModel = new PanelModel();
-							new Panel($_SESSION["password"],$panelModel->checkFolder($_SESSION["password"]),null);							
+							new Panel($_SESSION["userObjectId"],$panelModel->checkFolder($_SESSION["userObjectId"]),null);							
 						}
 						
 						break;
@@ -165,5 +164,3 @@ include 'panel/panelmodel.php';
 		}
 
 		?>
-	
-</html>

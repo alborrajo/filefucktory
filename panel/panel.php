@@ -3,7 +3,7 @@ class Panel {
 
 	function __construct($folder,$files,$alert) {
 		?>
-
+	<html>
 		<head>
 			<meta charset="utf-8"> 
 			<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,25 +15,72 @@ class Panel {
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+			<title>FileFucktory</title>
+
+			<!-- Cookie functions -->
+		    <script src="js/cookies.js"></script>
+
+			<!-- Delete cookies -->
+			<script>
+				function delCookies() {
+					eraseCookie("email");
+					eraseCookie("passwordHash");
+				}
+			</script>
+						
 		</head>
 
 		<body>
 			<!-- Navbar -->
 			<nav class="navbar navbar-inverse">
 				<div class="container-fluid">
-					<a class="navbar-brand" href="" style="padding: 5px; margin-top:5px">
+					<a class="navbar-brand" href="./" style="padding: 5px; margin-top: 4px;">
 						<img src="img/logowhite.png" class="img-fluid" style="height: 100%;">
 					</a>
-					<ul class="nav navbar-nav navbar-right" style="padding: 5px 10px 0px 0px">
+
+					<ul class="nav navbar-nav navbar-right" style="padding: 4px 10px 0px 0px">>
 						<li>
-							<form action="" method="post">
-								<input type="hidden" name="action" value="logout">
-								<button type="submit" class="btn navbar-btn">Desconectar</button>
-							</form>
+							<button type="button" class="btn navbar-btn btn-info" data-toggle="modal" data-target="#inviteModal">Invitar (WIP)</button>
+						</li>
+						<li>
+							<button type="button" class="btn navbar-btn"><a href="./?action=logout">Desconectar</a></button>
 						</li>
 					</ul>
+					
 				</div>
 			</nav>
+
+			<!-- Modal de invitaciones -->
+			<div class="modal fade" id="inviteModal" role="dialog">
+			    <div class="modal-dialog">
+			    
+			      <!-- Modal content-->
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal">&times;</button>
+			          <h4 class="modal-title">Invitar usuario</h4>
+			        </div>
+
+					<div class="modal-body">
+						<form action="./" method="post">
+							<label for="email">Email:</label>
+							<input type="email" name="email" class="form-control"></input>
+							<input type="hidden" name="action" value="invite">
+
+							<br>
+							
+							<button type="submit" class="btn btn-primary">Enviar invitación</button>
+						</form>
+			        </div>
+			        
+			        <div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+			        </div>
+			      </div>
+									      
+			    </div>
+			</div>
+		
 		
 			<!-- Contenido -->
 			<div class="container">
@@ -110,18 +157,54 @@ class Panel {
 						        </div>
 						        <div class="modal-body">
 						        
-						          <form action="" method="post" enctype="multipart/form-data">
-						          	<input type="hidden" name="action" value="upload">
-						          	<label class="btn btn-default" for="fileToUpload">
-						          		Elegir fichero <input type="file" name="fileToUpload" id="fileToUpload" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
-						          	</label>
-									<span class="label label-info" id="fileInfo"></span>
-									
-						    		<br>
-						    		<br>
+						        	<form action="" method="post" enctype="multipart/form-data">
+						          		<input type="hidden" name="action" value="upload">
+
+						          		<label class="btn btn-default" for="fileToUpload">
+						        	  		Elegir fichero <input type="file" name="fileToUpload" id="fileToUpload" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
+						       		   	</label>
+										<span class="label label-info" id="fileInfo"></span>
+
+										<div class="progress">
+											<div class="progress-bar progress-bar-striped active" style="width:0%" id="progressBar"></div>
+										</div>
 						    		
-						          	<input type="submit" class="btn btn-primary" value="Subir">
-						          </form>
+						          		<input type="button" class="btn btn-primary" value="Subir" id="submit">
+
+						          		<script type="text/javascript">
+											var _submit = document.getElementById('submit'),
+												_file = document.getElementById('fileToUpload'),
+												_progress = document.getElementById('progressBar');
+
+											var upload = function() {
+
+												if(_file.files.length==0) {return;}
+												
+												var data = new FormData();
+												data.append('fileToUpload',_file.files[0]);
+												data.append('action',"upload");
+
+												var request = new XMLHttpRequest();
+												request.onreadystatechange = function(){
+													if(request.readyState == 4) {
+														console.log(request.responseText);
+														var status = JSON.parse(request.responseText).status;
+														location.href="./?action=upload&status="+status;
+													}
+												};
+
+												request.upload.addEventListener('progress',function(e){
+													_progress.style.width = Math.ceil((e.loaded/e.total)*100) + "%";
+												},false);
+
+												request.open('POST','./');
+												request.send(data);
+											}
+
+											_submit.addEventListener('click',upload);
+						          		</script>
+						          		
+						        	</form>
 						          
 						        </div>
 						        <div class="modal-footer">
@@ -241,6 +324,7 @@ class Panel {
 			</div>
 
 		</body>
+	</html>
 		<?php
 	}
 

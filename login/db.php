@@ -1,17 +1,37 @@
 <?php
 class DB {
 
+	function getOID($email, $pass) {
+		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+		
+		$query = new MongoDB\Driver\Query(array("email"=>$email));				
+		$queryResult = $manager->executeQuery('filefucktory.user', $query);
+		
+		foreach($queryResult->toArray() as $user) {
+
+			if(password_verify($pass, $user->password)) {
+				return $user->_id;
+			}
+			else {
+				return "warning";
+			}
+		}
+	}
+
 	function checkUser($email, $pass) {
 		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
 		
-		$query = new MongoDB\Driver\Query(array("email"=>$email,"password"=>$pass));				
-		$existingUser = $manager->executeQuery('filefucktory.user', $query);
+		$query = new MongoDB\Driver\Query(array("email"=>$email));				
+		$queryResult = $manager->executeQuery('filefucktory.user', $query);
 		
-		if(!empty($existingUser->toArray())) {
-			return "success";
-		}
-		else {
-			return "warning";
+		foreach($queryResult->toArray() as $user) {
+
+			if(password_verify($pass, $user->password)) {
+				return "success";
+			}
+			else {
+				return "warning";
+			}
 		}
 	}
 

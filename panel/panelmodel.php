@@ -12,28 +12,40 @@ class PanelModel {
 	}
 
 	function uploadFile($files) {
-		$targetDir = "files/".$_SESSION["password"]."/";
+		$targetDir = "files/".$_SESSION["userObjectId"]."/";
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
 
 		if(pathinfo($files["fileToUpload"]["name"], PATHINFO_EXTENSION) == "php") {
+			header('Content-Type: application/json');
+			echo json_encode(array("status"=>"info"));
+			exit;
 			return "info";			
 		}
-		elseif(file_exists($targetFile)) {
+		
+		if(file_exists($targetFile)) {
+			header('Content-Type: application/json');
+			echo json_encode(array("status"=>"warning"));
+			exit;
 			return "warning";
 		}
+
+		if(move_uploaded_file($files["fileToUpload"]["tmp_name"], $targetFile)) {
+			header('Content-Type: application/json');
+			echo json_encode(array("status"=>"success"));
+			exit;
+			return "success";
+		}
 		else {
-			if(move_uploaded_file($files["fileToUpload"]["tmp_name"], $targetFile)) {
-				return "success";
-			}
-			else {
-				return "danger";
-			}
+			header('Content-Type: application/json');
+			echo json_encode(array("status"=>"danger"));
+			exit;
+			return "danger";
 		}
 		
 	}	
 
 	function deleteFile($relPath) {
-		$targetFile = "files/".$_SESSION["password"]."/".$relPath;
+		$targetFile = "files/".$_SESSION["userObjectId"]."/".$relPath;
 
 		if(unlink($targetFile)) {
 			return "success";
@@ -42,4 +54,5 @@ class PanelModel {
 			return "warning";
 		}
 	}
+	
 }
