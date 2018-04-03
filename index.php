@@ -26,6 +26,7 @@ include 'panel/panelmodel.php';
 								$_SESSION["email"] = $_POST["email"];
 								$_SESSION["password"] = $_POST["passwordHash"];
 								$_SESSION["userFolder"] = $panelModel->getFolder($_POST["email"]);
+								$_SESSION["currentFolder"] = ".";
 								header("Location: ./?");
 								break;
 								
@@ -148,6 +149,13 @@ include 'panel/panelmodel.php';
 					//Si lo es
 					case "success":
 					
+						//Si se recibe una carpeta por POST, usarla
+						if(isset($_POST["dir"])) {
+							$_SESSION["currentFolder"] = str_replace("../","",$_POST["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
+						}
+						$folder = $_SESSION["currentFolder"];
+						
+					
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {
 							$status = null;
@@ -193,7 +201,7 @@ include 'panel/panelmodel.php';
 
 							$msgtext = "";
 							$msgstatus = $_GET["status"];
-															
+																				
 							switch($_GET["action"]) {
 								case "upload":								
 									switch($_GET["status"]) {
@@ -260,13 +268,13 @@ include 'panel/panelmodel.php';
 							}
 							
 							$panelModel = new PanelModel();
-							new Panel(".",$panelModel->checkFolder(".",$_SESSION["email"]),$msgstatus,$msgtext);				
+							new Panel($folder,$panelModel->checkFolder($folder,$_SESSION["email"]),$msgstatus,$msgtext);				
 						}
 						
 						//Si no, mostrar panel
 						else {
 							$panelModel = new PanelModel();
-							new Panel(".",$panelModel->checkFolder(".",$_SESSION["email"]),null,null);
+							new Panel($folder,$panelModel->checkFolder($folder,$_SESSION["email"]),null,null);
 						}
 						
 						break;

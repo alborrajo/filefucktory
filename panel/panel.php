@@ -220,6 +220,81 @@ class Panel {
 							
 							<tbody>
 								<?php
+								$dirNum = 0;
+								foreach($files["dirs"] as $dir) {
+									?>
+									<tr>
+										<!-- Nombre -->
+										<td>
+											<form action="" method="post" id="dir<?php echo $dirNum;?>">
+												<input type="hidden" name="dir" value="<?php echo $folder."/".$dir["dir"]; ?>">
+												<a href="#" onclick="document.getElementById('dir<?php echo $dirNum;?>').submit()"><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
+											</form>
+										</td>
+
+										<!-- Tamaño -->
+										<td>
+											<?php
+												//Redondear tamaño
+												if($dir["size"] > 1073742000) {
+													echo round($dir["size"]/1073742000,2) ?> GB<?php
+												}
+												if($dir["size"] > 1048576) {
+													echo round($dir["size"]/1048576) ?> MB<?php
+												}
+												else if($dir["size"] > 1024) {
+													echo round($dir["size"]/1024) ?> KB<?php
+												}
+												else {
+													echo round($dir["size"]) ?> B<?php
+												}
+											?>
+										</td>
+
+										<!-- Borrar -->
+										<td>
+											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteDir<?php echo $dirNum; ?>" name="action" value="delete">
+												<span class="fa fa-trash"><span class="fa fa-folder-open"></span> (WIP)
+											</button>
+
+											<div class="modal fade" id="deleteDir<?php echo $dirNum; ?>" role="dialog">
+											    <div class="modal-dialog">
+											    
+											      <!-- Modal content-->
+											      <div class="modal-content">
+											        <div class="modal-header">
+											        	<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4>Eliminar directorio <?php echo $dir["file"]; ?></h4>
+											        </div>
+					        				        <div class="modal-body">
+					        				        
+														<form action="" method="post">
+
+															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
+																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
+															<input type="hidden" name="file" value="<?php echo $dir["file"]; ?>"">
+															<input type="hidden" name="action" value="delete">
+															
+												          	<input type="submit" class="btn btn-danger" value="Eliminar">
+														</form>
+														
+											        </div>
+											        <div class="modal-footer">
+											          <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+											        </div>
+											      </div>
+											      
+											    </div>
+											</div>
+											
+										</td>
+									</tr>
+									<?php
+								$dirNum++;
+								}
+
+
+								
 								$fileNum = 0;
 								foreach($files["files"] as $file) {
 									?>
@@ -231,6 +306,9 @@ class Panel {
 										<td>
 											<?php
 												//Redondear tamaño
+												if($file["size"] > 1073742000) {
+													echo round($file["size"]/1073742000,2) ?> GB<?php
+												}
 												if($file["size"] > 1048576) {
 													echo round($file["size"]/1048576) ?> MB<?php
 												}

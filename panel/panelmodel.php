@@ -5,6 +5,25 @@ class PanelModel {
 		return md5($email);
 	}
 	
+	function deleteDir($dirPath) {
+	    if (! is_dir($dirPath)) {
+	        return false;
+	    }
+	    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+	        $dirPath .= '/';
+	    }
+	    $files = glob($dirPath . '*', GLOB_MARK);
+	    foreach ($files as $file) {
+	        if (is_dir($file)) {
+	            self::deleteDir($file);
+	        } else {
+	            unlink($file);
+	        }
+	    }
+	    rmdir($dirPath);
+	    return true;
+	}
+			
 	function GetDirectorySize($path){
 	    $bytestotal = 0;
 	    $path = realpath($path);
@@ -17,14 +36,23 @@ class PanelModel {
 	}
 	
 	function checkFolder($folder,$email) {
-		$ls = array_diff( scandir("files/".$_SESSION["userFolder"]."/".$folder), array('..','.'));
-
+	
 		//Array $files:
 		//	"file": Filename
-		//	"size": Filesize 
+		//	"size": Filesize
+		//Array $dirs:
+		//	"dir": Directory
+		//	"size": Dir size
 		$files = array();
+		$dirs = array();
+		$ls = array_diff( scandir("files/".$_SESSION["userFolder"]."/".$folder), array('..','.')); 
 		foreach($ls as $file) {
-			array_push($files, array("file"=>$file, "size"=>filesize("files/".$_SESSION["userFolder"]."/".$folder."/".$file) ));
+			if(is_dir("files/".$_SESSION["userFolder"]."/".$folder."/".$file)) {
+				array_push($dirs, array("dir"=>$file, "size"=>$this->GetDirectorySize("files/".$_SESSION["userFolder"]."/".$folder."/".$file) ));
+			}
+			else {
+				array_push($files, array("file"=>$file, "size"=>filesize("files/".$_SESSION["userFolder"]."/".$folder."/".$file) ));
+			}
 		}
 
 		//Array $space
@@ -50,7 +78,8 @@ class PanelModel {
 		//Array return:
 		//	"space": $space
 		//	"files": $files
-		return array("space"=>$space,"files"=>$files);
+		//	"dirs":  $dirs
+		return array("space"=>$space,"files"=>$files,"dirs"=>$dirs);
 	}
 
 	function uploadFile($folder,$files,$email) {
@@ -111,12 +140,24 @@ class PanelModel {
 
 	function deleteFile($relPath) {
 		$targetFile = "files/".$_SESSION["userFolder"]."/".$relPath;
-
-		if(unlink($targetFile)) {
-			return "success";
+		
+		//If its a directory
+		if(is_dir($targetFile)) {
+			if(deleteDir($targetFile)) {
+				return "success";
+			}
+			else {
+				return "warning";
+			}
 		}
+		//If its not
 		else {
-			return "warning";
+			if(unlink($targetFile)) {
+				return "success";
+			}
+			else {
+				return "warning";
+			}
 		}
 	}
 	
