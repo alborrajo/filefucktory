@@ -1,13 +1,13 @@
 <?php
 
-class Login {
+class Register {
 
 	//Args:
 	//	$msgtype (warning, success, info, danger): Tipo de error
 	//	$msgtext (html): Mensajito guachi
 	//Al crear la clase con new Login("",""); no se muestra mensajito
 	
-	function __construct($msgtype,$msgtext) {
+	function __construct($email,$msgtype,$msgtext) {
 		?>
 	<html>
 		<head>
@@ -24,9 +24,6 @@ class Login {
 					
 		    <!-- Custom styles for this template -->
 		    <link href="css/signin.css" rel="stylesheet">
-
-			<!-- Cookie functions -->
-		    <script src="js/cookies.js"></script>
 
 		    <!-- Hashing JS -->
 			<script src="js/jshash-2.2/sha512-min.js"></script>
@@ -47,6 +44,8 @@ class Login {
 					if(inputRemember.checked) {
 						setCookie("email",inputEmail.value,365);
 						setCookie("passwordHash",inputPasswordHash.value,365);
+
+						alert(getCookie("passwordHash"));
 					}
 
 				}
@@ -71,24 +70,18 @@ class Login {
 					}
 					?>
 	
-			    	<h1 class="h3 mb-3 font-weight-normal">Inicie Sesion</h1>
+			    	<h1 class="h3 mb-3 font-weight-normal">Registro</h1>
 			    	
 			    	<label for="inputEmail" class="sr-only">Email</label>
-			    	<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+			    	<input type="email" name="email" value="<?php echo $email ?>" id="inputEmail" class="form-control" placeholder="Email address" required readonly>
 		
 			    	<label for="inputPassword" class="sr-only">Contrasena</label>
 			    	<input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
 			    	<input type="hidden" name="passwordHash" id="inputPasswordHash">
 	
-					<input type="hidden" name="action" value="login">
-					
-			       	<div class="checkbox mb-3">
-				    	<label>
-				    		<input type="checkbox" value="remember-me" id="inputRemember"> Mantener sesion iniciada
-				    	</label>
-			    	</div>
-			    	
-			    	<button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+					<input type="hidden" name="action" value="register">
+								    	
+			    	<button class="btn btn-lg btn-primary btn-block" type="submit">Enviar</button>
 		
 			    </form>
 

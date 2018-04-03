@@ -12,7 +12,7 @@ class PanelModel {
 	}
 
 	function uploadFile($files) {
-		$targetDir = "files/".$_SESSION["userObjectId"]."/";
+		$targetDir = "files/".$_SESSION["userFolder"]."/";
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
 
 		if(pathinfo($files["fileToUpload"]["name"], PATHINFO_EXTENSION) == "php") {
@@ -45,7 +45,7 @@ class PanelModel {
 	}	
 
 	function deleteFile($relPath) {
-		$targetFile = "files/".$_SESSION["userObjectId"]."/".$relPath;
+		$targetFile = "files/".$_SESSION["userFolder"]."/".$relPath;
 
 		if(unlink($targetFile)) {
 			return "success";

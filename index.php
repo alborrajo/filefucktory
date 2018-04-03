@@ -3,6 +3,9 @@
 include 'login/login.php';
 include 'login/db.php';
 
+include 'login/register.php';
+include 'login/mailmodel.php';
+
 include 'panel/panel.php';
 include 'panel/panelmodel.php';
 ?>
@@ -21,11 +24,19 @@ include 'panel/panelmodel.php';
 							case "success":
 								$_SESSION["email"] = $_POST["email"];
 								$_SESSION["password"] = $_POST["passwordHash"];
-								$_SESSION["userObjectId"] = $db->getOID($_POST["email"],$_POST["passwordHash"]);
-								header("Location: ./");
+								$_SESSION["userFolder"] = $db->getFolder($_POST["email"]);
+								header("Location: ./?");
 								break;
 								
 							default:
+								//Clear session
+								session_destroy();
+						
+								//Clear cookies
+								setcookie("email","",-3600);
+								setcookie("passwordHash","",-3600);
+
+								//Load login page with message
 								header("Location: ./?action=".$_POST["action"]."&result=".$result);
 								exit();
 								break;
@@ -35,7 +46,7 @@ include 'panel/panelmodel.php';
 						
 					case 'register':
 						$db = new DB();
-						$result = $db->newUser($_POST["email"],$_POST["password"]);
+						$result = $db->newUser($_POST["email"],$_POST["passwordHash"]);
 
 						header("Location: ./?action=".$_POST["action"]."&result=".$result);
 						exit();
@@ -61,22 +72,35 @@ include 'panel/panelmodel.php';
 						}
 						break;
 
-					case 'register': //Tras un POST de registrarse
-						switch($_GET["result"]) {
-							case "success":
-								new Login("success","Cuenta creada con exito");
-								break;
-							case "warning":
-								new Login("warning","Ya existe una cuenta con ese email");
-								break;
-							case "danger":
-								new Login("danger","Error desconocido mientras se creaba la cuenta");
-								break;
-							default:
-								new Login("info","<strong>HUH HAH</strong>");
-								break;
-						}						
-						break;
+
+					case 'register': //Tras un POST de registrarse o a punto de registrarse
+					
+						//A punto de registrarse
+						if(isset($_GET["email"])) {
+							new Register($_GET["email"],null,null);
+						}
+
+						//Tras un POST de registrarse
+						else {
+							switch($_GET["result"]) {
+								case "success":
+									new Login("success","Cuenta creada con exito");
+									break;
+								case "info":
+									new Login("info","Ya existe una cuenta con ese email");
+									break;
+								case "warning":
+									new Login("warning","El email no ha sido invitado a FileFucktory");
+									break;
+								case "danger":
+									new Login("danger","Error desconocido mientras se creaba la cuenta");
+									break;
+								default:
+									new Login("info","<strong>chiquitan</strong> chiquitin tan tan tan quetun pampam quetum pan que tepetepe tam tantan quetum pam quepin");
+									break;
+							}						
+							break;
+						}
 						
 					case 'registerForm':
 						//Comprobar si invitacion valida
@@ -106,6 +130,13 @@ include 'panel/panelmodel.php';
 				new Login("success","Sesión cerrada");
 			}
 
+			// Register
+			elseif(isset($_GET["action"]) && $_GET["action"] == "register") {
+				session_destroy();
+				header("Location: ./?action=register&email=".$_GET["email"]);
+				exit();
+			}
+			
 			//Funcionamiento normal
 			else {
 				//Comprobar si la sesión iniciada es correcta
@@ -129,6 +160,23 @@ include 'panel/panelmodel.php';
 								case "delete":
 									$status = $panelModel->deleteFile($_POST["file"]);
 									break;
+
+								case "invite":
+									$db = new DB();
+									$statusDB = $db->inviteUser($_POST["email"]);
+
+									//if($statusDB == "success" || $statusDB == "info") {
+										$mailModel = new MailModel();
+										if($mailModel->sendInvite($_POST["email"])) {
+											$status = "success";
+										}
+										else {
+											$status = "warning";
+										}
+									//} else {
+									//	$status = $statusDB;
+									//}
+									break;
 								
 								default:
 									$status = "warning";
@@ -136,26 +184,97 @@ include 'panel/panelmodel.php';
 							}
 
 							header("Location: ./?action=".$_POST["action"]."&status=".$status);							
-							
+							exit;
 						}
 						
 						//Si no, comprobar si viene por GET
 						if(isset($_GET["action"])) {
+
+							$msgtext = "";
+							
+							switch($_GET["action"]) {
+								case "upload":
+									switch($_GET["status"]) {
+										case "success":
+											$msgtext = "Fichero subido con éxito";
+											break;
+										case "info":
+											$msgtext = "Formato de fichero no admitido";
+											break;
+										case "warning":
+											$msgtext = "El fichero ya existe";
+											break;
+										case "danger":
+											$msgtext = "Error en la subida del fichero";
+											break;
+										default:
+											$msgtext = "Algo raro ha ocurrido";
+											break;
+									}
+									break;
+
+								case "delete":
+									switch($_GET["status"]) {
+										case "success":
+											$msgtext = "Fichero eliminado con éxito";
+											break;
+										case "warning":
+											$msgtext = "Error eliminando el fichero";
+											break;
+										default:
+											$msgtext = "Algo raro ha ocurrido";
+											break;
+									}
+									break;
+
+								case "invite":
+									switch($_GET["status"]) {
+										case "success":
+											$msgtext = "Invitación enviada";
+											break;
+										case "info":
+											$msgtext = "Email ya invitado";
+											break;
+										case "info":
+											$msgtext = "Error enviando el email";
+											break;
+										case "danger":
+											$msgtext = "Error invitando al usuario";
+											break;
+										default:
+											$msgtext = "Algo raro ha ocurrido";
+											break;
+									}
+									break;
+
+								default:
+									$msgtext = "Algo raro ha ocurrido";
+									break;	
+									
+							}
+							
 							$panelModel = new PanelModel();
-							new Panel($_SESSION["userObjectId"],$panelModel->checkFolder($_SESSION["userObjectId"]),array("action"=>$_GET["action"],"status"=>$_GET["status"]));				
+							new Panel($_SESSION["userFolder"],$panelModel->checkFolder($_SESSION["userFolder"]),$_GET["status"],$msgtext);				
 						}
 						
 						//Si no, mostrar panel
 						else {
 							$panelModel = new PanelModel();
-							new Panel($_SESSION["userObjectId"],$panelModel->checkFolder($_SESSION["userObjectId"]),null);							
+							new Panel($_SESSION["userFolder"],$panelModel->checkFolder($_SESSION["userFolder"]),null,null);
 						}
 						
 						break;
 
 					//Si hay algún error
 					default:
+						//Clear session
 						session_destroy();
+
+						//Clear cookies
+						setcookie("email","",-3600);
+						setcookie("passwordHash","",-3600);
+
+						//Display login page
 						new Login("danger","Error con la sesión iniciada");
 						break;
 				}

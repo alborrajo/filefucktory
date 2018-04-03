@@ -1,7 +1,7 @@
 <?php
 class Panel {
 
-	function __construct($folder,$files,$alert) {
+	function __construct($folder,$files,$msgtype,$msgtext) {
 		?>
 	<html>
 		<head>
@@ -40,10 +40,10 @@ class Panel {
 
 					<ul class="nav navbar-nav navbar-right" style="padding: 4px 10px 0px 0px">>
 						<li>
-							<button type="button" class="btn navbar-btn btn-info" data-toggle="modal" data-target="#inviteModal">Invitar (WIP)</button>
+							<button type="button" class="btn navbar-btn btn-primary" data-toggle="modal" data-target="#inviteModal">Invitar</button>
 						</li>
 						<li>
-							<button type="button" class="btn navbar-btn"><a href="./?action=logout">Desconectar</a></button>
+							<button type="button" class="btn navbar-btn" onclick="eraseCookie('email'); eraseCookie('passwordHash'); window.location=('./?action=logout');">Desconectar</button>
 						</li>
 					</ul>
 					
@@ -89,50 +89,11 @@ class Panel {
 
 				<?php
 				//Si no se ha omitido el tercer arg
-				if($alert != null) {
+				if($msgtype != null || $msgtype != "") {
 					?>
-						<div class="alert alert-<?php echo $alert["status"] ?>">
+						<div class="alert alert-<?php echo $msgtype ?>">
 							<?php
-							switch($alert["action"]) {
-								case "upload":
-									switch($alert["status"]) {
-										case "success":
-											echo "Fichero subido con éxito";
-											break;
-										case "info":
-											echo "Formato de fichero no admitido";
-											break;
-										case "warning":
-											echo "El fichero ya existe";
-											break;
-										case "danger":
-											echo "Error en la subida del fichero";
-											break;
-										default:
-											echo "Algo raro ha ocurrido";
-											break;
-									}
-									break;
-
-								case "delete":
-									switch($alert["status"]) {
-										case "success":
-											echo "Fichero eliminado con éxito";
-											break;
-										case "warning":
-											echo "Error eliminando el fichero";
-											break;
-										default:
-											echo "Algo raro ha ocurrido";
-											break;
-									}
-									break;
-
-								default:
-									echo "Algo raro ha ocurrido";
-									break;	
-									
-							}
+								echo $msgtext;
 							?>
 						</div>
 					<?php
