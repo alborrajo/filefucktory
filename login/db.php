@@ -1,38 +1,6 @@
 <?php
 class DB {
 
-	function getFolder($email) {
-		//Metodo nuevo que realmene da el email encodeado en md5
-		return md5($email);
-	
-		//Metodo viejo que daba los OIDs de verdad
-		/*
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-		
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$queryResult = $manager->executeQuery('filefucktory.user', $query);
-		
-		$queryArray = $queryResult->toArray();
-
-		//If there are no results
-		if(empty($queryArray)) {
-			return "warning";
-		}
-		//If there are
-		else {
-			foreach($queryArray as $user) {
-	
-				if(password_verify($pass, $user->password)) {
-					return $user->_id;
-				}
-				else {
-					return "warning";
-				}
-			}
-		}
-		*/
-	}
-
 	function checkUser($email, $pass) {
 		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
 		

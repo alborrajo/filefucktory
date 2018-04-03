@@ -19,12 +19,13 @@ include 'panel/panelmodel.php';
 				switch($_POST["action"]) {
 					case 'login':
 						$db = new DB();
+						$panelModel = new PanelModel();
 						$result = $db->checkUser($_POST["email"],$_POST["passwordHash"]);
 						switch($result) {
 							case "success":
 								$_SESSION["email"] = $_POST["email"];
 								$_SESSION["password"] = $_POST["passwordHash"];
-								$_SESSION["userFolder"] = $db->getFolder($_POST["email"]);
+								$_SESSION["userFolder"] = $panelModel->getFolder($_POST["email"]);
 								header("Location: ./?");
 								break;
 								
@@ -154,7 +155,7 @@ include 'panel/panelmodel.php';
 							
 							switch($_POST["action"]) {
 								case "upload": //Subida de fichero
-									$status = $panelModel->uploadFile($_FILES);
+									$status = $panelModel->uploadFile(".",$_FILES,$_SESSION["email"]);
 									break;
 									
 								case "delete":
@@ -191,9 +192,10 @@ include 'panel/panelmodel.php';
 						if(isset($_GET["action"])) {
 
 							$msgtext = "";
-							
+							$msgstatus = $_GET["status"];
+															
 							switch($_GET["action"]) {
-								case "upload":
+								case "upload":								
 									switch($_GET["status"]) {
 										case "success":
 											$msgtext = "Fichero subido con éxito";
@@ -203,6 +205,10 @@ include 'panel/panelmodel.php';
 											break;
 										case "warning":
 											$msgtext = "El fichero ya existe";
+											break;
+										case "warningfull":
+											$msgtext = "No hay suficiente espacio libre";
+											$msgstatus = "warning";
 											break;
 										case "danger":
 											$msgtext = "Error en la subida del fichero";
@@ -254,13 +260,13 @@ include 'panel/panelmodel.php';
 							}
 							
 							$panelModel = new PanelModel();
-							new Panel($_SESSION["userFolder"],$panelModel->checkFolder($_SESSION["userFolder"]),$_GET["status"],$msgtext);				
+							new Panel(".",$panelModel->checkFolder(".",$_SESSION["email"]),$msgstatus,$msgtext);				
 						}
 						
 						//Si no, mostrar panel
 						else {
 							$panelModel = new PanelModel();
-							new Panel($_SESSION["userFolder"],$panelModel->checkFolder($_SESSION["userFolder"]),null,null);
+							new Panel(".",$panelModel->checkFolder(".",$_SESSION["email"]),null,null);
 						}
 						
 						break;
