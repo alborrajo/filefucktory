@@ -219,6 +219,15 @@ class Panel {
 							</thead>
 							
 							<tbody>
+								
+								<tr>
+									<td>
+										<a class="navbar-brand" href="" style="padding: 5px; margin-top: 4px;">
+											<span class="fa fa-level-up-alt"></span>Back
+										</a>
+									</td>
+								</tr>
+
 								<?php
 								$dirNum = 0;
 								foreach($files["dirs"] as $dir) {
