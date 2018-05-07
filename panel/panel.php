@@ -106,7 +106,7 @@ class Panel {
 					<div class="panel-heading">
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">Subir <span class="fa fa-cloud-upload"></span></button>
-							<button type="button" class="btn" data-toggle="modal" data-target="#makedirModal">Crear carpeta (WIP) <span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
+							<button type="button" class="btn" data-toggle="modal" data-target="#makedirModal">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
 						</div>
 						
 						<div class="modal fade" id="uploadModal" role="dialog">
@@ -253,7 +253,12 @@ class Panel {
 							<tbody>
 								
 								<tr>
-									<td><a class="navbar-brand" href="./" style="padding: 5px; margin-top: 4px;"><span class="fa fa-level-up"></span>Back</a></td>
+									<td><a class="navbar-brand" href="" id="back" style="padding: 5px; margin-top: 4px;"><span class="fa fa-level-up"></span>Back</a></td>
+									<script>
+										var folder = "<?php echo $folder; ?>";
+										var pathArray = folder.split("/");
+										document.getElementById("back").href = pathArray[pathArray.length-2];
+									</script>
 									<td></td>
 									<td></td>
 								</tr>
