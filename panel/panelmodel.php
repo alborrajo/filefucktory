@@ -9,25 +9,24 @@ class PanelModel {
 		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDir."/".$dirName;
 		if(mkdir($dirPath)) {return "success";} else {return "warning";}
 	}
-	
+
 	function deleteDir($relDirPath) {
-		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDirPath;
-	    if (! is_dir($dirPath)) {
-	        return "warning";
-	    }
-	    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-	        $dirPath .= '/';
-	    }
-	    $files = glob($dirPath . '*', GLOB_MARK);
-	    foreach ($files as $file) {
-	        if (is_dir($file)) {
-	            self::deleteDir($file);
-	        } else {
-	            unlink($file);
-	        }
-	    }
-	    rmdir($dirPath);
-	    return "success";
+		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
+		$dir = opendir($src);
+		while(false !== ( $file = readdir($dir)) ) {
+			if (( $file != '.' ) && ( $file != '..' )) {
+				$full = $src . '/' . $file;
+				if ( is_dir($full) ) {
+					rrmdir($full);
+				}
+				else {
+					unlink($full);
+				}
+			}
+		}
+		closedir($dir);
+		rmdir($src);
+		return "success";
 	}
 			
 	function GetDirectorySize($path){

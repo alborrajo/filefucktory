@@ -156,7 +156,6 @@ include 'panel/panelmodel.php';
 							switch($_POST["action"]) {
 								case "upload": //Subida de fichero
 									$status = $panelModel->uploadFile($folder,$_FILES,$_SESSION["email"]);
-									$folder = str_replace("../","",$_REQUEST["dir"]); //For security reasons, avoid users from putting ../ somewhere and escaping their folder
 									break;
 
 								case "makedir": //Directory creation
