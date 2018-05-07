@@ -163,7 +163,7 @@ include 'panel/panelmodel.php';
 									break;
 
 								case "deleteDir":
-									$status = $panelModel->deleteDir($_POST["dir"]);
+									$status = $panelModel->deleteDir($_POST["dirToDelete"]);
 									break;
 
 								case "invite":
