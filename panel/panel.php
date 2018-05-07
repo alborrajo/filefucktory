@@ -253,11 +253,11 @@ class Panel {
 							<tbody>
 								
 								<tr>
-									<td><a class="navbar-brand" href="?dir=" id="back" style="padding: 5px; margin-top: 4px;"><span class="fa fa-level-up"></span>Back</a></td>
+									<td><a class="navbar-brand" href="" id="back" style="padding: 5px; margin-top: 4px;"><span class="fa fa-level-up"></span>Back</a></td>
 									<script>
 										var folder = "<?php echo $folder; ?>";
-										var pathArray = folder.split("/");
-										document.getElementById("back").href = document.getElementById("back").href+pathArray[pathArray.length-2];
+										var pathMinusOne = folder.slice(0, folder.length-1).join("/");
+										document.getElementById("back").href = "?dir="+pathMinusOne;
 									</script>
 									<td></td>
 									<td></td>
