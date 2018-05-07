@@ -121,8 +121,8 @@ class Panel {
 						        <div class="modal-body">
 						        
 						        	<form action="" method="post" enctype="multipart/form-data">
+						          		<input type="hidden" name="dir" value="<?php echo $folder?>">	
 						          		<input type="hidden" name="action" value="upload">
-						          		<input type="hidden" name="dir" value="<?php echo $folder?>">
 
 						          		<label class="btn btn-default" for="fileToUpload">
 						        	  		Elegir fichero <input type="file" name="fileToUpload" id="fileToUpload" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
@@ -147,6 +147,7 @@ class Panel {
 												var data = new FormData();
 												data.append('fileToUpload',_file.files[0]);
 												data.append('action',"upload");
+												data.append('dir',"<?php echo $folder;?>");
 
 												var request = new XMLHttpRequest();
 												request.onreadystatechange = function(){

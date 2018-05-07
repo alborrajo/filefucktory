@@ -155,8 +155,6 @@ include 'panel/panelmodel.php';
 						else {
 							$folder = "";
 						}
-
-						if(isset($_POST["dir"])) {var_dump($_POST["dir"]);} else {var_dump("gabo");}
 					
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {
