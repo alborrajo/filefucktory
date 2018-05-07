@@ -106,7 +106,7 @@ class PanelModel {
 		}
 
 
-		$targetDir = "files/".$_SESSION["userFolder"]."/".$folder;
+		$targetDir = "files/".$_SESSION["userFolder"]."/".$folder."/";
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
 
 		if(pathinfo($files["fileToUpload"]["name"], PATHINFO_EXTENSION) == "php") {
