@@ -221,11 +221,7 @@ class Panel {
 							<tbody>
 								
 								<tr>
-									<td>
-										<a class="navbar-brand" href="" style="padding: 5px; margin-top: 4px;">
-											<span class="fa fa-level-up-alt"></span>Back
-										</a>
-									</td>
+									<td><a class="navbar-brand" href="./" style="padding: 5px; margin-top: 4px;"><span class="fa fa-level-up"></span>Back</a></td>
 								</tr>
 
 								<?php
@@ -306,7 +302,7 @@ class Panel {
 									?>
 									<tr>
 										<!-- Nombre -->
-										<td><a href="files/<?php echo $_SESSION["userFolder"] ?>/<?php echo $folder ?>/<?php echo $file["file"]?>"><?php echo $file["file"] ?></a></td>
+										<td><a href="files/<?php echo $_SESSION["userFolder"].$folder."/".$file["file"]?>"><?php echo $file["file"] ?></a></td>
 
 										<!-- Tamaño -->
 										<td>
