@@ -17,7 +17,7 @@ class PanelModel {
 			if (( $file != '.' ) && ( $file != '..' )) {
 				$full = $src . '/' . $file;
 				if ( is_dir($full) ) {
-					rrmdir($full);
+					deleteDir($full);
 				}
 				else {
 					unlink($full);
