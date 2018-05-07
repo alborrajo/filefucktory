@@ -106,7 +106,7 @@ class Panel {
 					<div class="panel-heading">
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">Subir <span class="fa fa-cloud-upload"></span></button>
-							<button type="button" class="btn">Crear carpeta (WIP) <span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
+							<button type="button" class="btn" data-toggle="modal" data-target="#makedirModal">Crear carpeta (WIP) <span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
 						</div>
 						
 						<div class="modal fade" id="uploadModal" role="dialog">
@@ -176,6 +176,39 @@ class Panel {
 						          <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
 						        </div>
 						      </div>
+
+							  <div class="modal fade" id="makedirModal" role="dialog">
+								<div class="modal-dialog">
+								
+									<!-- Modal content-->
+									<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4>Crear directorio</h4>
+									</div>
+									<div class="modal-body">
+									
+										<form action="" method="post">
+
+											<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
+													//Manejar en el controlador la ruta relativa a la raiz de la web ?>
+											<input type="hidden" name="dir" value="<?php echo $folder; ?>"">
+											<input type="hidden" name="action" value="makedir">
+											
+											Nombre del directorio:
+											<input type="text" name="dirName"></input>
+											
+											<input type="submit" class="btn btn-primary" value="Crear">
+										</form>
+										
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+									</div>
+									</div>
+									
+								</div>
+							  </div>
 						      
 						    </div>
 						</div>
@@ -260,7 +293,7 @@ class Panel {
 										<!-- Borrar -->
 										<td>
 											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteDir<?php echo $dirNum; ?>" name="action" value="delete">
-												<span class="fa fa-trash"><span class="fa fa-folder-open"></span> (WIP)
+												<span class="fa fa-trash"><span class="fa fa-folder-open"></span>
 											</button>
 
 											<div class="modal fade" id="deleteDir<?php echo $dirNum; ?>" role="dialog">

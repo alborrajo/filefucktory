@@ -4,6 +4,11 @@ class PanelModel {
 	function getFolder($email) {
 		return md5($email);
 	}
+
+	function makeDir($relDir,$dirName) {
+		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDir."/".$dirName;
+		if(mkdir($dirPath)) {return "success";} else {return "warning";}
+	}
 	
 	function deleteDir($relDirPath) {
 		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDirPath;

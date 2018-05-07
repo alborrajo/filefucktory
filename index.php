@@ -157,6 +157,10 @@ include 'panel/panelmodel.php';
 								case "upload": //Subida de fichero
 									$status = $panelModel->uploadFile($folder,$_FILES,$_SESSION["email"]);
 									break;
+
+								case "makedir": //Directory creation
+									$status = $panelModel->makeDir($folder,$_POST["dirName"]);
+									break;
 									
 								case "delete":
 									$status = $panelModel->deleteFile($_POST["file"]);
@@ -216,6 +220,20 @@ include 'panel/panelmodel.php';
 											break;
 										case "danger":
 											$msgtext = "Error en la subida del fichero";
+											break;
+										default:
+											$msgtext = "Algo raro ha ocurrido";
+											break;
+									}
+									break;
+
+								case "makedir":
+									switch($_GET["status"]) {
+										case "success":
+											$msgtext = "Directorio creado con éxito";
+											break;
+										case "warning":
+											$msgtext = "Error creando el directorio";
 											break;
 										default:
 											$msgtext = "Algo raro ha ocurrido";
