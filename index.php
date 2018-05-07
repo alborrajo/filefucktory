@@ -102,14 +102,6 @@ include 'panel/panelmodel.php';
 							}						
 							break;
 						}
-						
-					case 'registerForm':
-						//Comprobar si invitacion valida
-						//if valido
-						//	new formulario register
-						//else
-						//	new mensajito de error
-						break;
 
 					default:
 						new Login("info","Visite nuestra web afiliada:<br><a href='http://fucktorio.ddns.net' class='alert-link'>fucktorio</a>");
@@ -170,6 +162,10 @@ include 'panel/panelmodel.php';
 									$status = $panelModel->deleteFile($_POST["file"]);
 									break;
 
+								case "deleteDir":
+									$status = $panelModel->deleteDir($_POST["dir"]);
+									break;
+
 								case "invite":
 									$db = new DB();
 									$statusDB = $db->inviteUser($_POST["email"]);
@@ -192,7 +188,7 @@ include 'panel/panelmodel.php';
 									break;
 							}
 
-							header("Location: ./?action=".$_POST["action"]."&status=".$status);							
+							header("Location: ./?action=".$_POST["action"]."&status=".$status."&dir=".$folder);							
 							exit;
 						}
 						

@@ -270,7 +270,7 @@ class Panel {
 											      <div class="modal-content">
 											        <div class="modal-header">
 											        	<button type="button" class="close" data-dismiss="modal">&times;</button>
-														<h4>Eliminar directorio <?php echo $dir["file"]; ?></h4>
+														<h4>Eliminar directorio <?php echo $dir["dir"]; ?></h4>
 											        </div>
 					        				        <div class="modal-body">
 					        				        
@@ -278,8 +278,8 @@ class Panel {
 
 															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
 																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
-															<input type="hidden" name="file" value="<?php echo $dir["file"]; ?>"">
-															<input type="hidden" name="action" value="delete">
+															<input type="hidden" name="dir" value="<?php echo $folder.$dir["dir"]; ?>"">
+															<input type="hidden" name="action" value="deleteDir">
 															
 												          	<input type="submit" class="btn btn-danger" value="Eliminar">
 														</form>
