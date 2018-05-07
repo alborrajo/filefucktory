@@ -5,7 +5,8 @@ class PanelModel {
 		return md5($email);
 	}
 	
-	function deleteDir($dirPath) {
+	function deleteDir($relDirPath) {
+		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDirPath;
 	    if (! is_dir($dirPath)) {
 	        return "warning";
 	    }
