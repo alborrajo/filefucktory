@@ -192,7 +192,7 @@ include 'panel/panelmodel.php';
 									break;
 							}
 
-							header("Location: ./?action=".$_POST["action"]."&status=".$status."&dir=".$folder);							
+							header("Location: ./?action=".$_POST["action"]."&status=".$status."&dir=".$folder);
 							exit;
 						}
 						
