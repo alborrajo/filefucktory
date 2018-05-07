@@ -226,10 +226,7 @@ class Panel {
 									<tr>
 										<!-- Nombre -->
 										<td>
-											<form action="" method="post" id="dir<?php echo $dirNum;?>">
-												<input type="hidden" name="dir" value="<?php echo $folder."/".$dir["dir"]; ?>">
-												<a href="#" onclick="document.getElementById('dir<?php echo $dirNum;?>').submit()"><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
-											</form>
+											<a href="<?php echo $folder."/".$dir["dir"]; ?>" onclick="document.getElementById('dir<?php echo $dirNum;?>').submit()"><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
 										</td>
 
 										<!-- Tamaño -->

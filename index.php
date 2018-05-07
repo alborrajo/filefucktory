@@ -26,7 +26,7 @@ include 'panel/panelmodel.php';
 								$_SESSION["email"] = $_POST["email"];
 								$_SESSION["password"] = $_POST["passwordHash"];
 								$_SESSION["userFolder"] = $panelModel->getFolder($_POST["email"]);
-								$_SESSION["currentFolder"] = ".";
+								$currentFolder = ".";
 								header("Location: ./?");
 								break;
 								
@@ -150,17 +150,17 @@ include 'panel/panelmodel.php';
 					case "success":
 					
 						//Si se recibe una carpeta por POST, usarla
-						if(isset($_POST["dir"])) {
-							$_SESSION["currentFolder"] = str_replace("../","",$_POST["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
+						if(isset($_GET["dir"])) {
+							$currentFolder = str_replace("../","",$_GET["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
 						}
-						$folder = $_SESSION["currentFolder"];
+						$folder = $currentFolder;
 						
 					
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {
 							$status = null;
 							$panelModel = new PanelModel();
-							
+		
 							switch($_POST["action"]) {
 								case "upload": //Subida de fichero
 									$status = $panelModel->uploadFile(".",$_FILES,$_SESSION["email"]);
