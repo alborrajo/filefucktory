@@ -7,7 +7,7 @@ class PanelModel {
 	
 	function deleteDir($dirPath) {
 	    if (! is_dir($dirPath)) {
-	        return false;
+	        return "warning";
 	    }
 	    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
 	        $dirPath .= '/';
@@ -21,7 +21,7 @@ class PanelModel {
 	        }
 	    }
 	    rmdir($dirPath);
-	    return true;
+	    return "success";
 	}
 			
 	function GetDirectorySize($path){

@@ -237,6 +237,20 @@ include 'panel/panelmodel.php';
 									}
 									break;
 
+								case "deleteDir":
+									switch($_GET["status"]) {
+										case "success":
+											$msgtext = "Directorio eliminado con éxito";
+											break;
+										case "warning":
+											$msgtext = "Error eliminando el directorio";
+											break;
+										default:
+											$msgtext = "Algo raro ha ocurrido";
+											break;
+									}
+									break;
+
 								case "invite":
 									switch($_GET["status"]) {
 										case "success":
