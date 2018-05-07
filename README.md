@@ -32,3 +32,5 @@ It can be tried in http://filefucktory.ga/ (Requires invitation to join)
 - Make a **files** folder and give your web server permission to use it
 
 - Enable site on your web server configuration
+
+	- Max file upload size should be specified in PHP configuration
