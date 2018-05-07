@@ -154,7 +154,7 @@ class Panel {
 													if(request.readyState == 4) {
 														console.log(request.responseText);
 														var status = JSON.parse(request.responseText).status;
-														location.href="./?action=upload&status="+status;
+														location.href="./?action=upload&status="+status+"&dir=<?php echo $folder;?>";
 													}
 												};
 
