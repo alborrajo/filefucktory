@@ -207,7 +207,7 @@ class Panel {
 									<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
 								</div>
 							</div>
-									
+						  </div>
 						</div>
 
 						<div class="pull-right" width="30%";>
