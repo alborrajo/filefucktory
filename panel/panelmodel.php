@@ -12,12 +12,17 @@ class PanelModel {
 
 	function deleteDir($relDirPath) {
 		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
+		$this->rrmdir($src);
+		return "success";
+	}
+
+	function rrmdir($src) {
 		$dir = opendir($src);
 		while(false !== ( $file = readdir($dir)) ) {
 			if (( $file != '.' ) && ( $file != '..' )) {
 				$full = $src . '/' . $file;
 				if ( is_dir($full) ) {
-					$this->deleteDir($full);
+					rrmdir($full);
 				}
 				else {
 					unlink($full);
@@ -26,7 +31,6 @@ class PanelModel {
 		}
 		closedir($dir);
 		rmdir($src);
-		return "success";
 	}
 			
 	function GetDirectorySize($path){
