@@ -148,13 +148,15 @@ include 'panel/panelmodel.php';
 					//Si lo es
 					case "success":
 					
-						//Si se recibe una carpeta por POST, usarla
-						if(isset($_GET["dir"])) {
-							$folder = str_replace("../","",$_GET["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
+						//If a folder is received, use it
+						if(isset($_REQUEST["dir"])) {
+							$folder = str_replace("../","",$_REQUEST["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
 						}
 						else {
 							$folder = "";
-						}						
+						}
+
+						if(isset($_POST["dir"])) {var_dump($_POST["dir"]);} else {var_dump("gabo");}
 					
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {
@@ -163,7 +165,7 @@ include 'panel/panelmodel.php';
 		
 							switch($_POST["action"]) {
 								case "upload": //Subida de fichero
-									$status = $panelModel->uploadFile(".",$_FILES,$_SESSION["email"]);
+									$status = $panelModel->uploadFile($folder,$_FILES,$_SESSION["email"]);
 									break;
 									
 								case "delete":

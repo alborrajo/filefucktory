@@ -122,6 +122,7 @@ class Panel {
 						        
 						        	<form action="" method="post" enctype="multipart/form-data">
 						          		<input type="hidden" name="action" value="upload">
+						          		<input type="hidden" name="dir" value="<?php echo $folder?>">
 
 						          		<label class="btn btn-default" for="fileToUpload">
 						        	  		Elegir fichero <input type="file" name="fileToUpload" id="fileToUpload" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
@@ -231,7 +232,7 @@ class Panel {
 									<tr>
 										<!-- Nombre -->
 										<td>
-											<a href="?dir=<?php echo $folder."/".$dir["dir"]; ?>" onclick="document.getElementById('dir<?php echo $dirNum;?>').submit()"><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
+											<a href="?dir=<?php echo $folder."/".$dir["dir"]; ?>""><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
 										</td>
 
 										<!-- Tamaño -->
