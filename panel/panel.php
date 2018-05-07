@@ -223,6 +223,8 @@ class Panel {
 								
 								<tr>
 									<td><a class="navbar-brand" href="./" style="padding: 5px; margin-top: 4px;"><span class="fa fa-level-up"></span>Back</a></td>
+									<td></td>
+									<td></td>
 								</tr>
 
 								<?php
@@ -345,7 +347,7 @@ class Panel {
 
 															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
 																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
-															<input type="hidden" name="file" value="<?php echo $file["file"]; ?>"">
+															<input type="hidden" name="file" value="<?php echo $folder."/".$file["file"]; ?>"">
 															<input type="hidden" name="action" value="delete">
 															
 												          	<input type="submit" class="btn btn-danger" value="Eliminar">

@@ -150,13 +150,11 @@ include 'panel/panelmodel.php';
 					
 						//If a folder is received, use it
 						if(isset($_REQUEST["dir"])) {
-							$folder = str_replace("../","",$_REQUEST["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
+							$folder = str_replace("../","",$_REQUEST["dir"]); //For security reasons, avoid users from putting ../ somewhere and escaping their folder
 						}
 						else {
 							$folder = "";
 						}
-
-						if(isset($_POST["dir"])) {var_dump($_POST["dir"]);} else {var_dump("gabo");}
 					
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {

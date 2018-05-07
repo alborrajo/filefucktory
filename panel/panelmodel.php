@@ -139,7 +139,7 @@ class PanelModel {
 	}	
 
 	function deleteFile($relPath) {
-		$targetFile = "files/".$_SESSION["userFolder"]."/".$relPath;
+		$targetFile = "files/".$_SESSION["userFolder"].$relPath;
 		
 		//If its a directory
 		if(is_dir($targetFile)) {
