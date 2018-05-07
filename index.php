@@ -26,7 +26,6 @@ include 'panel/panelmodel.php';
 								$_SESSION["email"] = $_POST["email"];
 								$_SESSION["password"] = $_POST["passwordHash"];
 								$_SESSION["userFolder"] = $panelModel->getFolder($_POST["email"]);
-								$currentFolder = ".";
 								header("Location: ./?");
 								break;
 								
@@ -151,10 +150,11 @@ include 'panel/panelmodel.php';
 					
 						//Si se recibe una carpeta por POST, usarla
 						if(isset($_GET["dir"])) {
-							$currentFolder = str_replace("../","",$_GET["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
+							$folder = str_replace("../","",$_GET["dir"]); //Por seguridad, evitar que la gente intente salir de la carpeta y liarla
 						}
-						$folder = $currentFolder;
-						
+						else {
+							$folder = "";
+						}						
 					
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {
