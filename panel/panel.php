@@ -226,7 +226,7 @@ class Panel {
 									<tr>
 										<!-- Nombre -->
 										<td>
-											<a href="<?php echo $folder."/".$dir["dir"]; ?>" onclick="document.getElementById('dir<?php echo $dirNum;?>').submit()"><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
+											<a href="?dir=<?php echo $folder."/".$dir["dir"]; ?>" onclick="document.getElementById('dir<?php echo $dirNum;?>').submit()"><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
 										</td>
 
 										<!-- Tamaño -->
