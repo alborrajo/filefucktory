@@ -12,6 +12,8 @@ class Panel {
 			<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>		    
 
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+			
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -40,10 +42,10 @@ class Panel {
 
 					<ul class="nav navbar-nav navbar-right" style="padding: 4px 10px 0px 0px">>
 						<li>
-							<button type="button" class="btn navbar-btn btn-primary" data-toggle="modal" data-target="#inviteModal">Invitar</button>
+							<button type="button" class="btn navbar-btn btn-primary" data-toggle="modal" data-target="#inviteModal">Invitar <span class="fa fa-address-book"></span></button>
 						</li>
 						<li>
-							<button type="button" class="btn navbar-btn" onclick="eraseCookie('email'); eraseCookie('passwordHash'); window.location=('./?action=logout');">Desconectar</button>
+							<button type="button" class="btn navbar-btn" onclick="eraseCookie('email'); eraseCookie('passwordHash'); window.location=('./?action=logout');">Desconectar <span class="fa fa-sign-out"></span></button>
 						</li>
 					</ul>
 					
@@ -103,8 +105,8 @@ class Panel {
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="btn-group">
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">Subir</button>
-							<button type="button" class="btn">Crear carpeta (WIP)</button>
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">Subir <span class="fa fa-cloud-upload"></span></button>
+							<button type="button" class="btn" data-toggle="modal" data-target="#makedirModal">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
 						</div>
 						
 						<div class="modal fade" id="uploadModal" role="dialog">
@@ -119,6 +121,7 @@ class Panel {
 						        <div class="modal-body">
 						        
 						        	<form action="" method="post" enctype="multipart/form-data">
+						          		<input type="hidden" name="dir" value="<?php echo $folder?>">	
 						          		<input type="hidden" name="action" value="upload">
 
 						          		<label class="btn btn-default" for="fileToUpload">
@@ -144,13 +147,14 @@ class Panel {
 												var data = new FormData();
 												data.append('fileToUpload',_file.files[0]);
 												data.append('action',"upload");
+												data.append('dir',"<?php echo $folder;?>");
 
 												var request = new XMLHttpRequest();
 												request.onreadystatechange = function(){
 													if(request.readyState == 4) {
 														console.log(request.responseText);
 														var status = JSON.parse(request.responseText).status;
-														location.href="./?action=upload&status="+status;
+														location.href="./?action=upload&status="+status+"&dir=<?php echo $folder;?>";
 													}
 												};
 
@@ -176,22 +180,58 @@ class Panel {
 						    </div>
 						</div>
 
+						<div class="modal fade" id="makedirModal" role="dialog">
+							<div class="modal-dialog">
+								
+								<!-- Modal content-->
+								<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4>Crear directorio</h4>
+								</div>
+								<div class="modal-body">
+									<form action="" method="post">
+										<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
+											//Manejar en el controlador la ruta relativa a la raiz de la web ?>
+										<input type="hidden" name="dir" value="<?php echo $folder; ?>"">
+										<input type="hidden" name="action" value="makedir">
+											
+										Nombre del directorio:
+										<input type="text" name="dirName"></input>
+											
+										<input type="submit" class="btn btn-primary" value="Crear">
+									</form>
+										
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+								</div>
+							</div>
+						  </div>
+						</div>
+
 						<div class="pull-right" width="30%";>
 							<div class="label label-info">
 							<?php
-								$si_prefix = array('B', 'KB', 'MB', 'GB', 'TB');
-								$base = 1024;
+								$used = round($files["space"]["usedmb"]); //Used space in MB
+								$usedString = $used." MB";
+								
+								$total = round($files["space"]["spacemb"]); //Total space in MB
+								$totalString = $total." MB";
 
-								$freeBytes = disk_free_space(".");
-								$freeClass = min((int)log($freeBytes,$base), count($si_prefix) - 1);
-
-								$allBytes = disk_total_space(".");
-								$allClass = min((int)log($allBytes,$base), count($si_prefix) - 1);
-
-								$remainingString = round($allBytes/pow($base,$freeClass)) - round($freeBytes/pow($base,$freeClass)) . " " . $si_prefix[$freeClass];
-								$allString = round($allBytes/pow($base,$allClass)) . " " . $si_prefix[$allClass];
-					
-								echo $remainingString . " / " . $allString;
+								//Convert to GB if needed (with one digit after the dot)
+								//Used space
+								if($used >= 1024)  {
+									$used = round($used/1024, 1);
+									$usedString = $used." GB";
+								}
+								//Free space
+								if($total >= 1024) {
+									$total = round($total/1024, 1);
+									$totalString = $total." GB";
+								}
+				
+								echo $usedString . " / " . $totalString;
 							?>
 							</div>
 						</div>
@@ -202,27 +242,115 @@ class Panel {
 					
 					<div class="panel-body">
 						<table class="table table-hover">
-							<thead>
 								<tr>
-									<th>Fichero<span class="glyphicons glyphicons-file"></span></th>
-									<th>Peso<span class="glyphicons glyphicons-pie-chart"></span></th>
-									<th>Borrar<span class="glyphicons glyphicons-remove-sign"></span></th>
+							<thead>
+									<th>Fichero <span class="fa fa-file"></span></th>
+									<th>Peso <span class="fa fa-pie-chart"></span></th>
+									<th>Borrar <span class="fa fa-trash"></span></th>
 								</tr>
 							</thead>
 							
 							<tbody>
+								
+								<tr>
+									<td><a class="navbar-brand" href="" id="back" style="padding: 5px; margin-top: 4px;"><span class="fa fa-level-up"></span>Back</a></td>
+									<script>
+										var folder = "<?php echo $folder; ?>";
+										var pathArr = folder.split("/");
+    									var pathMinusOne = pathArr.slice(0, pathArr.length-1).join("/")
+										document.getElementById("back").href = "?dir="+pathMinusOne;
+									</script>
+									<td></td>
+									<td></td>
+								</tr>
+
 								<?php
-								$fileNum = 0;
-								foreach($files as $file) {
+								$dirNum = 0;
+								foreach($files["dirs"] as $dir) {
 									?>
 									<tr>
 										<!-- Nombre -->
-										<td><a href="files/<?php echo $folder ?>/<?php echo $file["file"]?>"><?php echo $file["file"] ?></a></td>
+										<td>
+											<a href="?dir=<?php echo $folder."/".$dir["dir"]; ?>""><span class="fa fa-folder-open"></span> <?php echo $dir["dir"]; ?></a>
+										</td>
 
 										<!-- Tamaño -->
 										<td>
 											<?php
 												//Redondear tamaño
+												if($dir["size"] > 1073742000) {
+													echo round($dir["size"]/1073742000,2) ?> GB<?php
+												}
+												if($dir["size"] > 1048576) {
+													echo round($dir["size"]/1048576) ?> MB<?php
+												}
+												else if($dir["size"] > 1024) {
+													echo round($dir["size"]/1024) ?> KB<?php
+												}
+												else {
+													echo round($dir["size"]) ?> B<?php
+												}
+											?>
+										</td>
+
+										<!-- Borrar -->
+										<td>
+											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteDir<?php echo $dirNum; ?>" name="action" value="delete">
+												<span class="fa fa-trash"><span class="fa fa-folder-open"></span>
+											</button>
+
+											<div class="modal fade" id="deleteDir<?php echo $dirNum; ?>" role="dialog">
+											    <div class="modal-dialog">
+											    
+											      <!-- Modal content-->
+											      <div class="modal-content">
+											        <div class="modal-header">
+											        	<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4>Eliminar directorio <?php echo $dir["dir"]; ?></h4>
+											        </div>
+					        				        <div class="modal-body">
+					        				        
+														<form action="" method="post">
+
+															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
+																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
+															<input type="hidden" name="dirToDelete" value="<?php echo $folder.$dir["dir"]; ?>"">
+															<input type="hidden" name="action" value="deleteDir">
+															
+												          	<input type="submit" class="btn btn-danger" value="Eliminar">
+														</form>
+														
+											        </div>
+											        <div class="modal-footer">
+											          <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+											        </div>
+											      </div>
+											      
+											    </div>
+											</div>
+											
+										</td>
+									</tr>
+									<?php
+								$dirNum++;
+								}
+
+
+								
+								$fileNum = 0;
+								foreach($files["files"] as $file) {
+									?>
+									<tr>
+										<!-- Nombre -->
+										<td><a href="files/<?php echo $_SESSION["userFolder"].$folder."/".$file["file"]?>"><?php echo $file["file"] ?></a></td>
+
+										<!-- Tamaño -->
+										<td>
+											<?php
+												//Redondear tamaño
+												if($file["size"] > 1073742000) {
+													echo round($file["size"]/1073742000,2) ?> GB<?php
+												}
 												if($file["size"] > 1048576) {
 													echo round($file["size"]/1048576) ?> MB<?php
 												}
@@ -238,7 +366,7 @@ class Panel {
 										<!-- Borrar -->
 										<td>
 											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete<?php echo $fileNum; ?>" name="action" value="delete">
-												<span class="glyphicons glyphicons-remove-sign">
+												<span class="fa fa-trash">
 											</button>
 
 											<div class="modal fade" id="delete<?php echo $fileNum; ?>" role="dialog">
@@ -256,7 +384,7 @@ class Panel {
 
 															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
 																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
-															<input type="hidden" name="file" value="<?php echo $file["file"]; ?>"">
+															<input type="hidden" name="file" value="<?php echo $folder."/".$file["file"]; ?>"">
 															<input type="hidden" name="action" value="delete">
 															
 												          	<input type="submit" class="btn btn-danger" value="Eliminar">

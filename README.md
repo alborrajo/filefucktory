@@ -3,6 +3,8 @@
 
 Made as a project to learn how to develop webpages
 
+It can be tried in http://filefucktory.ga/ (Requires invitation to join)
+
 ##### Features
 
 - Account based system
