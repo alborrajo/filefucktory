@@ -18,7 +18,10 @@ class Login {
 		    <link rel="icon" href="img/favicon.ico">
 				
 		    <title>FileFucktory</title>
-				
+
+			<!-- GitLab Ribbon CSS -->
+			<link rel="stylesheet" href="css/gl-fork-ribbons.css">
+							
 		    <!-- Bootstrap core CSS -->
 		    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 					
@@ -55,7 +58,7 @@ class Login {
 		</head>
 
 		<body>
-			<a href="https://github.com/alborrajo/filefucktory"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+			<a class="gitlab-fork-ribbon right-top" href="https://gitlab.com/alvarolopezborr/filefucktory" data-ribbon="Fork me on GitLab" title="Fork me on GitLab">Fork me on GitLab</a>
 		
 			<div class="text-center">
 			
