@@ -359,7 +359,7 @@ class Panel {
 																	<tbody>	
 																			<!-- Move up one folder -->
 																			<tr>
-																				<th><span class="fa fa-level-up-alt"></th>
+																				<th><span class="fa fa-level-up"></th>
 																				<th>
 																					<form action="" method="post">
 																						<input type="hidden" name="action" value="move">
@@ -506,7 +506,7 @@ class Panel {
 
 																			<!-- Move up one folder -->
 																			<tr>
-																				<th><span class="fa fa-level-up-alt"></th>
+																				<th><span class="fa fa-level-up"></th>
 																				<th>
 																					<form action="" method="post">
 																						<input type="hidden" name="action" value="move">
