@@ -356,7 +356,21 @@ class Panel {
 																		</tr>
 																	</thead>
 																	
-																	<tbody>		
+																	<tbody>	
+																			<!-- Move up one folder -->
+																			<tr>
+																				<th><span class="fa fa-level-up-alt"></th>
+																				<th>
+																					<form action="" method="post">
+																						<input type="hidden" name="action" value="move">
+																						<input type="hidden" name="src" value="<?php echo $folder."/".$dir["dir"]; ?>">
+																						<input type="hidden" name="dst" value="<?php echo $folder."/".$dirDst["dir"]; ?>">
+																						<button type="submit" class="btn btn-primary"><span class="fa fa-share"></button>
+																					</form>
+																				</th>
+																			</tr>
+
+																			<!-- Move to folder -->
 																		<?php
 																		foreach($files["dirs"] as $dirDst) {
 																			?>
@@ -488,7 +502,22 @@ class Panel {
 																		</tr>
 																	</thead>
 																	
-																	<tbody>		
+																	<tbody>
+
+																			<!-- Move up one folder -->
+																			<tr>
+																				<th><span class="fa fa-level-up-alt"></th>
+																				<th>
+																					<form action="" method="post">
+																						<input type="hidden" name="action" value="move">
+																						<input type="hidden" name="src" value="<?php echo $folder."/".$dir["dir"]; ?>">
+																						<input type="hidden" name="dst" value="<?php echo $folder."/".$dirDst["dir"]; ?>">
+																						<button type="submit" class="btn btn-primary"><span class="fa fa-share"></button>
+																					</form>
+																				</th>
+																			</tr>
+
+																			<!-- Move to folder -->
 																		<?php
 																		foreach($files["dirs"] as $dir) {
 																			?>
