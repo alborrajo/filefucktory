@@ -170,6 +170,10 @@ include 'panel/panelmodel.php';
 									$status = $panelModel->deleteDir($_POST["dirToDelete"]);
 									break;
 
+								case "move":
+									$status = $panelModel->moveFile($_POST["src"],$_POST["dst"]);
+									break;
+
 								case "invite":
 									$db = new DB();
 									$statusDB = $db->inviteUser($_POST["email"]);
@@ -265,6 +269,17 @@ include 'panel/panelmodel.php';
 											break;
 										default:
 											$msgtext = "Algo raro ha ocurrido";
+											break;
+									}
+									break;
+
+								case "move":
+									switch($_GET["status"]) {
+										case "success":
+											$mgstext = "Fichero movido con éxito";
+											break;
+										case "warning":
+											$mgstext = "Error realizado con éxito";
 											break;
 									}
 									break;

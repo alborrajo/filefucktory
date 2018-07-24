@@ -32,6 +32,12 @@ class PanelModel {
 		closedir($dir);
 		rmdir($src);
 	}
+
+	function moveFile($relPath,$newRelPath) {
+		$src = "files/".$_SESSION["userFolder"]."/".str_replace("../","",$relPath);
+		$dst = "files/".$_SESSION["userFolder"]."/".str_replace("../","",$newRelPath);
+		if(rename($src,$dst)) {return "success";} else {return "warning";}
+	}
 			
 	function GetDirectorySize($path){
 	    $bytestotal = 0;

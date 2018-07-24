@@ -363,6 +363,72 @@ class Panel {
 											?>
 										</td>
 
+
+										<!-- Mover -->
+										<td>
+											<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#move<?php echo $fileNum; ?>" name="action" value="move">
+												<span class="fa fa-share">
+											</button>
+
+											<div class="modal fade" id="move<?php echo $fileNum; ?>" role="dialog">
+											    <div class="modal-dialog">
+											    
+											      <!-- Modal content-->
+											      <div class="modal-content">
+											        <div class="modal-header">
+											        	<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4>Mover <?php echo $file["file"]; ?></h4>
+											        </div>
+					        				        <div class="modal-body">
+
+														<div class="panel-group">
+															<div class="panel panel-default">
+
+																<table class="table table-hover">
+																	<thead>
+																		<tr>
+																			<th>Fichero <span class="fa fa-file"></span></th>
+																			<th>Peso <span class="fa fa-pie-chart"></span></th>
+																			<th>Borrar <span class="fa fa-trash"></span></th>
+																		</tr>
+																	</thead>
+																	
+																	<tbody>		
+																		<?php
+																		foreach($files["dirs"] as $dir) {
+																			?>
+																			<tr>
+																				<th><?php echo $dir["dir"] ?></th>
+																				<th>
+																					<form action="" method="post">
+																						<input type="hidden" name="action" value="move">
+																						<input type="hidden" name="src" value="<?php echo $folder."/".$file["file"]; ?>">
+																						<input type="hidden" name="dst" value="<?php echo $folder."/".$dir["dir"]; ?>">
+																						<button type="submit" class="btn btn-primary" data-dismiss="modal">Mover</button>
+																					</form>
+																				</th>
+																			</tr>
+																			<?php
+																		}
+																		?>
+																	</tbody>
+																</table>
+
+															</div>
+														</div>
+														
+											        </div>
+											        <div class="modal-footer">
+											          <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+											        </div>
+											      </div>
+											      
+											    </div>
+											</div>
+											
+										</td>
+
+
 										<!-- Borrar -->
 										<td>
 											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete<?php echo $fileNum; ?>" name="action" value="delete">
