@@ -276,11 +276,14 @@ include 'panel/panelmodel.php';
 								case "move":
 									switch($_GET["status"]) {
 										case "success":
-											$mgstext = "Fichero movido con éxito";
+											$msgtext = "Fichero movido con éxito";
 											break;
 										case "warning":
-											$mgstext = "Error realizado con éxito";
+											$msgtext = "Error moviendo el fichero";
 											break;
+										default:
+											$msgtext = "Error realizado con éxito";
+											$msgstatus = "danger";
 									}
 									break;
 
