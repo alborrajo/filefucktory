@@ -246,7 +246,7 @@ class Panel {
 							<thead>
 									<th>Fichero <span class="fa fa-file"></span></th>
 									<th>Peso <span class="fa fa-pie-chart"></span></th>
-									<th>Acciones <span class="fa fa-wrench"></span></th>
+									<th>Borrar <span class="fa fa-trash"></span></th>
 								</tr>
 							</thead>
 							
