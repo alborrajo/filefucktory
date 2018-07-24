@@ -11,6 +11,8 @@ It can be tried in http://filefucktory.ga/ (Requires invitation to join)
 
 - Limited storage per user
 
+- Uploading, deleting and moving files
+
 - New users can register only by being invited by other users
 
 - Client-side and server-side password hashing
