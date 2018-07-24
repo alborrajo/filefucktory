@@ -364,8 +364,45 @@ class Panel {
 										</td>
 
 
-										<!-- Mover -->
+										<!-- Acciones -->
 										<td>
+											<!-- Borrar -->
+											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete<?php echo $fileNum; ?>" name="action" value="delete">
+												<span class="fa fa-trash">
+											</button>
+
+											<div class="modal fade" id="delete<?php echo $fileNum; ?>" role="dialog">
+											    <div class="modal-dialog">
+											    
+											      <!-- Modal content-->
+											      <div class="modal-content">
+											        <div class="modal-header">
+											        	<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4>Eliminar <?php echo $file["file"]; ?></h4>
+											        </div>
+					        				        <div class="modal-body">
+					        				        
+														<form action="" method="post">
+
+															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
+																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
+															<input type="hidden" name="file" value="<?php echo $folder."/".$file["file"]; ?>"">
+															<input type="hidden" name="action" value="delete">
+															
+												          	<input type="submit" class="btn btn-danger" value="Eliminar">
+														</form>
+														
+											        </div>
+											        <div class="modal-footer">
+											          <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+											        </div>
+											      </div>
+											      
+											    </div>
+											</div>
+											
+
+											<!-- Mover -->
 											<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#move<?php echo $fileNum; ?>" name="action" value="move">
 												<span class="fa fa-share">
 											</button>
@@ -425,46 +462,6 @@ class Panel {
 											      
 											    </div>
 											</div>
-											
-										</td>
-
-
-										<!-- Borrar -->
-										<td>
-											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete<?php echo $fileNum; ?>" name="action" value="delete">
-												<span class="fa fa-trash">
-											</button>
-
-											<div class="modal fade" id="delete<?php echo $fileNum; ?>" role="dialog">
-											    <div class="modal-dialog">
-											    
-											      <!-- Modal content-->
-											      <div class="modal-content">
-											        <div class="modal-header">
-											        	<button type="button" class="close" data-dismiss="modal">&times;</button>
-														<h4>Eliminar <?php echo $file["file"]; ?></h4>
-											        </div>
-					        				        <div class="modal-body">
-					        				        
-														<form action="" method="post">
-
-															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
-																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
-															<input type="hidden" name="file" value="<?php echo $folder."/".$file["file"]; ?>"">
-															<input type="hidden" name="action" value="delete">
-															
-												          	<input type="submit" class="btn btn-danger" value="Eliminar">
-														</form>
-														
-											        </div>
-											        <div class="modal-footer">
-											          <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
-											        </div>
-											      </div>
-											      
-											    </div>
-											</div>
-											
 										</td>
 									</tr>
 									<?php
