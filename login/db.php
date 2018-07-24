@@ -58,7 +58,7 @@ class DB {
 
 	}
 
-	function newUser($email, $pass) {
+	function newUser($panelModel, $email, $pass) {
 		//Check if there is already an user with that email
 		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
 				
@@ -77,14 +77,15 @@ class DB {
 		}
 
 		//Get OID to make folder
-		$folderName = $this->getFolder($email);
+		$folderName = $panelModel->getFolder($email);
 		
 		//Check dir or make user dir, and if that works, return success
 		if(is_dir('./files/'.$folderName) || mkdir('./files/'.$folderName) ) {
 			//If there isn't an user with that email, the folder exists, and has been invited, add user to DB
 			$data = array(
 				"email" => (string)$email,
-				"password" => (string)password_hash($pass, PASSWORD_DEFAULT),	
+				"password" => (string)password_hash($pass, PASSWORD_DEFAULT),
+				"spacemb" => (string)"1024",
 			);
 			
 			//Add user to DB

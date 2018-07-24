@@ -47,7 +47,8 @@ include 'panel/panelmodel.php';
 						
 					case 'register':
 						$db = new DB();
-						$result = $db->newUser($_POST["email"],$_POST["passwordHash"]);
+						$panelModel = new PanelModel();
+						$result = $db->newUser($panelModel, $_POST["email"],$_POST["passwordHash"]);
 
 						header("Location: ./?action=".$_POST["action"]."&result=".$result);
 						exit();
