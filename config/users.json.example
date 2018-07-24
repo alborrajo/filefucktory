@@ -1,0 +1,10 @@
+{
+    "users":
+        [
+            { "email" : "example@filefucktory.ga", "password" : "", "spacemb" : 1024 },
+        ],
+    "invites":
+        [
+            { "email" : "testing@test.com"}
+        ]
+}
