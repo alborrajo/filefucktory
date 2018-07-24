@@ -330,7 +330,7 @@ class Panel {
 											</div>
 											
 											<!-- Mover -->
-											<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#move<?php echo $fileNum; ?>" name="action" value="move">
+											<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#moveDir<?php echo $dirNum; ?>" name="action" value="move">
 												<span class="fa fa-share">
 											</button>
 
