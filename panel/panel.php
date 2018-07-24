@@ -364,7 +364,7 @@ class Panel {
 																					<form action="" method="post">
 																						<input type="hidden" name="action" value="move">
 																						<input type="hidden" name="src" value="<?php echo $folder."/".$dir["dir"]; ?>">
-																						<input type="hidden" name="dst" value="<?php echo $folder."/".$dirDst["dir"]; ?>">
+																						<input type="hidden" name="dst" value="<?php echo dirname($folder); ?>">
 																						<button type="submit" class="btn btn-primary"><span class="fa fa-share"></button>
 																					</form>
 																				</th>
@@ -510,8 +510,8 @@ class Panel {
 																				<th>
 																					<form action="" method="post">
 																						<input type="hidden" name="action" value="move">
-																						<input type="hidden" name="src" value="<?php echo $folder."/".$dir["dir"]; ?>">
-																						<input type="hidden" name="dst" value="<?php echo $folder."/".$dirDst["dir"]; ?>">
+																						<input type="hidden" name="src" value="<?php echo $folder."/".$file["file"]; ?>">
+																						<input type="hidden" name="dst" value="<?php echo dirname($folder); ?>">
 																						<button type="submit" class="btn btn-primary"><span class="fa fa-share"></button>
 																					</form>
 																				</th>
