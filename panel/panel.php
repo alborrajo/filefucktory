@@ -341,7 +341,7 @@ class Panel {
 											      <div class="modal-content">
 											        <div class="modal-header">
 											        	<button type="button" class="close" data-dismiss="modal">&times;</button>
-														<h4>Mover <?php echo $file["file"]; ?></h4>
+														<h4>Mover <?php echo $dir["dir"]; ?></h4>
 											        </div>
 					        				        <div class="modal-body">
 
@@ -367,7 +367,7 @@ class Panel {
 																						<input type="hidden" name="action" value="move">
 																						<input type="hidden" name="src" value="<?php echo $folder."/".$dir["dir"]; ?>">
 																						<input type="hidden" name="dst" value="<?php echo $folder."/".$dirDst["dir"]; ?>">
-																						<button type="submit" class="btn btn-primary" data-dismiss="modal"><span class="fa fa-share"></button>
+																						<button type="submit" class="btn btn-primary"><span class="fa fa-share"></button>
 																					</form>
 																				</th>
 																			</tr>
@@ -499,7 +499,7 @@ class Panel {
 																						<input type="hidden" name="action" value="move">
 																						<input type="hidden" name="src" value="<?php echo $folder."/".$file["file"]; ?>">
 																						<input type="hidden" name="dst" value="<?php echo $folder."/".$dir["dir"]; ?>">
-																						<button type="submit" class="btn btn-primary" data-dismiss="modal"><span class="fa fa-share"></button>
+																						<button type="submit" class="btn btn-primary"><span class="fa fa-share"></button>
 																					</form>
 																				</th>
 																			</tr>
