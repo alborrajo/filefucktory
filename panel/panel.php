@@ -334,7 +334,7 @@ class Panel {
 												<span class="fa fa-share">
 											</button>
 
-											<div class="modal fade" id="move<?php echo $fileNum; ?>" role="dialog">
+											<div class="modal fade" id="moveDir<?php echo $dirNum; ?>" role="dialog">
 											    <div class="modal-dialog">
 											    
 											      <!-- Modal content-->
