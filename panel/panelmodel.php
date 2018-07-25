@@ -101,6 +101,9 @@ class PanelModel {
 		//Load DB
 		$db = json_decode(file_get_contents("config/users.json"));
 
+		//Check used space
+		$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
+		
 		//Check entries for a match (Get user folder space)
 		foreach($db->users as $user) {
 			if($user->email == $email) {
