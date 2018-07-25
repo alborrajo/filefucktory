@@ -37,8 +37,7 @@ class DB {
 		}
 
 		//If not already invited, add invite
-		$newInvite = clone $db->invites[0];
-		$newInvite->email = $email;
+		$newInvite = (object) [ 'email' = $email];
 
 		//Write updated DB to file
 		if(array_push($db->invites, $newInvite) && file_put_contents("config/users.json",json_encode($db))) {
@@ -72,11 +71,12 @@ class DB {
 					$config = json_decode(file_get_contents("config/config.json"));
 
 					//Add new user to DB
-					$newUser = clone $db->users[0];
-					$newUser->email = $email;
-					$newUser->password = password_hash($pass, PASSWORD_DEFAULT);
-					$newUser->spacemb = $config->defaultSpaceMB;
-
+					$newUser = (object) [
+						'email' = $email,
+						'password' = password_hash($pass, PASSWORD_DEFAULT),
+						'spacemb' = $config->defaultSpaceMB,
+					];
+					
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
 
 					//Remove invite from DB
