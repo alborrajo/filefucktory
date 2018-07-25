@@ -85,6 +85,6 @@ class DB {
 		}
 
 		//If email is not invited
-		return "warning"
+		return "warning";
 	}
 }
