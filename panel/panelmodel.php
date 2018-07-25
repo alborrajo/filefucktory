@@ -132,7 +132,7 @@ class PanelModel {
 
 		if($usedmb > $spacemb) {
 			header('Content-Type: application/json');
-			echo json_encode(array("status"="warningfulll"));
+			echo json_encode(array("status"=>"warningfulll"));
 			exit;
 		}
 
