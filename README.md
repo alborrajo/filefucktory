@@ -39,4 +39,4 @@ It can be tried in http://filefucktory.ga/ (Requires invitation to join)
 
 ###### Upgrading from previous versions
 
-Since newer versions don't use mongodb anymore, if you want to upgrade from a version that used mongodb, you'll have to run the script ```utils/mongo2json.sh``` and copy the output file to ```config/users.json``` 
+Since newer versions don't use **mongodb** anymore, if you want to upgrade from a version that used mongodb, you'll have to run the script ```utils/mongo2json.sh``` and copy the output file to ```config/users.json``` 

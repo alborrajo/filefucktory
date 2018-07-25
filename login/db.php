@@ -67,12 +67,15 @@ class DB {
 				$folderName = $panelModel->getFolder($email);
 
 				//If there isn't an user with that email, the folder exists, and has been invited, add user to DB
-				if(is_dir('./files/'.$folderName) || mkdir('./files/'.$folderName,0770) ) {	
+				if(is_dir('./files/'.$folderName) || mkdir('./files/'.$folderName,0770) ) {
+					//Load config file
+					$config = json_decode(file_get_contents("config/config.json"));
+
 					//Add new user to DB
 					$newUser = clone $db->users[0];
-					$newUser->email = (string)$email;
-					$newUser->password = (string)password_hash($pass, PASSWORD_DEFAULT);
-					$newUser->spacemb = (string)"1024";
+					$newUser->email = $email;
+					$newUser->password = password_hash($pass, PASSWORD_DEFAULT);
+					$newUser->spacemb = $config->defaultSpaceMB;
 
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
 
