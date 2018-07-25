@@ -61,7 +61,9 @@ class DB {
 		}
 
 		//Check entries for a match (User is invited)
-		foreach($db->invites as $invite) {
+		//foreach($db->invites as $invite) {
+		for($inviteIndex=0; $inviteIndex < count($db->invites); $inviteIndex++) {
+			$invite=$db->invites[$inviteIndex];
 			if($invite->email == $email) {
 				//Get folderName to make new folder
 				$folderName = $panelModel->getFolder($email);
@@ -80,7 +82,7 @@ class DB {
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
 
 					//Remove invite from DB
-					unset($invite);
+					unset($db->invites[$inviteIndex]);
 
 					//Write DB
 					if(file_put_contents("config/users.json",json_encode($db))) {
