@@ -65,7 +65,7 @@ class DB {
 					$newUser = clone $db->users[0];
 					$newUser->email = (string)$email;
 					$newUser->password = (string)password_hash($pass, PASSWORD_DEFAULT);
-					$newUser->spacemb => (string)"1024";
+					$newUser->spacemb = (string)"1024";
 
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
 
