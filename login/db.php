@@ -70,7 +70,8 @@ class DB {
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
 
 					//Remove invite from DB
-					if(!unset($invite)) {return "danger";} //Remove invite, return error if it goes wrong
+					//if(!unset($invite)) {return "danger";} //Remove invite, return error if it goes wrong
+					unset($invite);
 
 					//Write DB
 					if(file_put_contents("config/users.json",json_encode($db))) {
