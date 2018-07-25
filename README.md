@@ -19,13 +19,11 @@ It can be tried in http://filefucktory.ga/ (Requires invitation to join)
 
 ##### Installation
 
-###### Dependencies
+###### Requires
 
 - Web server (Tested with Apache)
 
 - PHP
-
-- MongoDB and mongod PHP plugin
 
 ###### How to install
 
@@ -36,3 +34,9 @@ It can be tried in http://filefucktory.ga/ (Requires invitation to join)
 - Enable site on your web server configuration
 
 	- Max file upload size should be specified in PHP configuration
+
+- The default configuration at ```config.json``` is valid for most cases, but it can be modified to match your preferences
+
+###### Upgrading from previous versions
+
+Since newer versions don't use mongodb anymore, if you want to upgrade from a version that used mongodb, you'll have to run the script ```utils/mongo2json.sh``` and copy the output file to ```config/users.json``` 

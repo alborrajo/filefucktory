@@ -73,22 +73,22 @@ class PanelModel {
 		//Array $space
 		//	"usedmb": Folder size in mb
 		//	"spacemb": Max space in mb
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-				
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$queryResult = $manager->executeQuery('filefucktory.user', $query);
-
-		$queryArray = $queryResult->toArray();
 		
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
+
+		//Check entries for a match
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
+				$space = array("usedmb"=>$usedmb, "spacemb"=>$user->spacemb);
+			}
+		}
 		//If there are no results
-		if(empty($queryArray)) {
+		if(!isset($space)) {
 			return "warning";
 		}
-		//If there are
-		else {				
-			$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
-			$space = array("usedmb"=>$usedmb, "spacemb"=>$queryArray[0]->spacemb);
-		}
+		
 
 		//Array return:
 		//	"space": $space
