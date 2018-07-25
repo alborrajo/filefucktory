@@ -37,7 +37,8 @@ class DB {
 		}
 
 		//If not already invited, add invite
-		$newInvite = (object) [ 'email' => $email ];
+		$newInvite = new stdObject();
+		$newInvite->email = $email;
 
 		//Write updated DB to file
 		if(array_push($db->invites, $newInvite) && file_put_contents("config/users.json",json_encode($db))) {
@@ -60,9 +61,7 @@ class DB {
 		}
 
 		//Check entries for a match (User is invited)
-		//foreach($db->invites as $invite) {
-		for($inviteIndex=0; $inviteIndex < count($db->invites); $inviteIndex++) {
-			$invite=$db->invites[$inviteIndex];
+		foreach($db->invites as $invite) {
 			if($invite->email == $email) {
 				//Get folderName to make new folder
 				$folderName = $panelModel->getFolder($email);
@@ -73,16 +72,15 @@ class DB {
 					$config = json_decode(file_get_contents("config/config.json"));
 
 					//Add new user to DB
-					$newUser = (object) [
-						'email' => $email,
-						'password' => password_hash($pass, PASSWORD_DEFAULT),
-						'spacemb' => $config->defaultSpaceMB,
-					];
-					
+					$newUser = new stdObject();
+					$newUser->email = $email;
+					$newUser->password = password_hash($pass, PASSWORD_DEFAULT);
+					$newUser->spacemb = $config->defaultSpaceMB;
+
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
 
 					//Remove invite from DB
-					unset($db->invites[$inviteIndex]);
+					unset($invite);
 
 					//Write DB
 					if(file_put_contents("config/users.json",json_encode($db))) {
