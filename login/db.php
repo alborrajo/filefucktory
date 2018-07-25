@@ -29,6 +29,13 @@ class DB {
 			}
 		}
 
+		//Check entries for a match (A user is already registered)
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				return "info";
+			}
+		}
+
 		//If not already invited, add invite
 		$newInvite = clone $db->invites[0];
 		$newInvite->email = $email;

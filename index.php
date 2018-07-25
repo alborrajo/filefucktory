@@ -100,9 +100,9 @@ include 'panel/panelmodel.php';
 								default:
 									new Login("info","<strong>chiquitan</strong> chiquitin tan tan tan quetun pampam quetum pan que tepetepe tam tantan quetum pam quepin");
 									break;
-							}						
-							break;
+							}
 						}
+						break;
 
 					default:
 						new Login("info","Visite nuestra web afiliada:<br><a href='http://fucktorio.ddns.net' class='alert-link'>fucktorio</a>");

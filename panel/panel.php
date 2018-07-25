@@ -296,7 +296,7 @@ class Panel {
 										<td>
 											<!-- Borrar -->
 											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteDir<?php echo $dirNum; ?>" name="action" value="delete">
-												<span class="fa fa-trash"><span class="fa fa-folder-open"></span>
+												<span class="fa fa-trash"></span>
 											</button>
 
 											<div class="modal fade" id="deleteDir<?php echo $dirNum; ?>" role="dialog">
