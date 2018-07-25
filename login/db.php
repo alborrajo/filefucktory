@@ -4,6 +4,7 @@ class DB {
 	function checkUser($email, $pass) {
 		//Load DB
 		$db = json_decode(file_get_contents("config/users.json"));
+		if(!$db) {return "danger";}
 
 		//Check entries for a match
 		foreach($db->users as $user) {
@@ -13,9 +14,7 @@ class DB {
 		}
 
 		//If there are no results
-		if(empty($db)) {
-			return "warning";
-		}
+		return "warning";
 	}
 
 	function inviteUser($email) {	
@@ -37,7 +36,7 @@ class DB {
 		}
 
 		//If not already invited, add invite
-		$newInvite = new stdObject();
+		$newInvite = new stdClass();
 		$newInvite->email = $email;
 
 		//Write updated DB to file
@@ -72,7 +71,7 @@ class DB {
 					$config = json_decode(file_get_contents("config/config.json"));
 
 					//Add new user to DB
-					$newUser = new stdObject();
+					$newUser = new stdClass();
 					$newUser->email = $email;
 					$newUser->password = password_hash($pass, PASSWORD_DEFAULT);
 					$newUser->spacemb = $config->defaultSpaceMB;
