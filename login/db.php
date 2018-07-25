@@ -78,7 +78,7 @@ class DB {
 						return "success";
 					}
 					else {
-						return "danger"
+						return "danger";
 					}
 				}
 			}
