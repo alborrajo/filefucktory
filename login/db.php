@@ -67,7 +67,7 @@ class DB {
 				$folderName = $panelModel->getFolder($email);
 
 				//If there isn't an user with that email, the folder exists, and has been invited, add user to DB
-				if(is_dir('./files/'.$folderName) || mkdir('./files/'.$folderName) ) {	
+				if(is_dir('./files/'.$folderName) || mkdir('./files/'.$folderName,0770) ) {	
 					//Add new user to DB
 					$newUser = clone $db->users[0];
 					$newUser->email = (string)$email;
@@ -77,7 +77,6 @@ class DB {
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
 
 					//Remove invite from DB
-					//if(!unset($invite)) {return "danger";} //Remove invite, return error if it goes wrong
 					unset($invite);
 
 					//Write DB

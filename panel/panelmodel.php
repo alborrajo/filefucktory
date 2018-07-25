@@ -98,28 +98,22 @@ class PanelModel {
 	}
 
 	function uploadFile($folder,$files,$email) {
-		//Check used space
-		$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
-		
-		//Check total space
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-						
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$queryResult = $manager->executeQuery('filefucktory.user', $query);
-		
-		$queryArray = $queryResult->toArray();
-		if(!empty($queryArray)) {
-			$spacemb = $queryArray[0]->spacemb;
-		}
-		else {
-			return "danger";
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
+
+		//Check entries for a match (Get user folder space)
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				$spacemb = $user->spacemb;
+			}
 		}
 
-		//Check if used > total
-		if($usedmb > $spacemb) {
-			return "warningfull";
+		//If spacemb can't be found
+		if(!isset($spacemb)) {
+			header('Content-Type: application/json');
+			echo json_encode(array("status"=>"danger"));
+			exit;
 		}
-
 
 		$targetDir = "files/".$_SESSION["userFolder"].$folder."/";
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
@@ -127,28 +121,30 @@ class PanelModel {
 		if(pathinfo($files["fileToUpload"]["name"], PATHINFO_EXTENSION) == "php") {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"info"));
-			exit;
-			return "info";			
+			exit;		
 		}
 						
 		if(file_exists($targetFile)) {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"warning"));
 			exit;
-			return "warning";
+		}
+
+		if($usedmb > $spacemb) {
+			header('Content-Type: application/json');
+			echo json_encode(array("status"="warningfulll"));
+			exit;
 		}
 
 		if(move_uploaded_file($files["fileToUpload"]["tmp_name"], $targetFile)) {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"success"));
 			exit;
-			return "success";
 		}
 		else {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"danger"));
 			exit;
-			return "danger";
 		}
 		
 	}	
