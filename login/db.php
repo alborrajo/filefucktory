@@ -37,7 +37,7 @@ class DB {
 		}
 
 		//If not already invited, add invite
-		$newInvite = (object) [ 'email' = $email];
+		$newInvite = (object) [ 'email' => $email ];
 
 		//Write updated DB to file
 		if(array_push($db->invites, $newInvite) && file_put_contents("config/users.json",json_encode($db))) {
@@ -74,9 +74,9 @@ class DB {
 
 					//Add new user to DB
 					$newUser = (object) [
-						'email' = $email,
-						'password' = password_hash($pass, PASSWORD_DEFAULT),
-						'spacemb' = $config->defaultSpaceMB,
+						'email' => $email,
+						'password' => password_hash($pass, PASSWORD_DEFAULT),
+						'spacemb' => $config->defaultSpaceMB,
 					];
 					
 					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
