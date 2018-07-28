@@ -143,13 +143,13 @@ include 'panel/panelmodel.php';
 					
 						//If a folder is received, use it
 						if(isset($_REQUEST["dir"])) {
-							//$folder = realpath($_REQUEST["dir"]); //Resolve path
+							//Replaces /../, ^../ or /..$ with ""
+							//	foo/../bar	->	foo/bar
+							//	../bar		->	bar
+							//	foo/..		-> 	foo
+							//Useful to avoid escaping from $workDir
 							$folder = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","",$_REQUEST["dir"]);
-							//Check if $folder is inside the user's folder
-							//If it isn't, don't use the received folder
-							//if(!strpos($folder,$_SESSION["userFolder"])) {
-							//	$folder="";
-							//}
+							
 						}
 						else {
 							$folder = "";

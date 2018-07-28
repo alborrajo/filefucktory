@@ -7,11 +7,13 @@ class PanelModel {
 
 	function makeDir($relDir,$dirName) {
 		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDir."/".$dirName;
+		$dirPath = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","",$dirPath); //Avoid escaping (remove /../, ../, and /..)
 		if(mkdir($dirPath)) {return "success";} else {return "warning";}
 	}
 
 	function deleteDir($relDirPath) {
 		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
+		$src = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","",$src);
 		$this->rrmdir($src);
 		return "success";
 	}
@@ -117,6 +119,7 @@ class PanelModel {
 		}
 
 		$targetDir = "files/".$_SESSION["userFolder"].$folder."/";
+		$targetDir = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","",$targetDir);
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
 
 		if(pathinfo($files["fileToUpload"]["name"], PATHINFO_EXTENSION) == "php") {
@@ -152,6 +155,7 @@ class PanelModel {
 
 	function deleteFile($relPath) {
 		$targetFile = "files/".$_SESSION["userFolder"].$relPath;
+		$targetFile = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","",$targetFile);
 		
 		//If its a directory
 		if(is_dir($targetFile)) {
