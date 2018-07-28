@@ -148,7 +148,7 @@ include 'panel/panelmodel.php';
 							//	../bar		->	bar
 							//	foo/..		-> 	foo
 							//Useful to avoid escaping from $workDir
-							$folder = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","",$_REQUEST["dir"]);
+							$folder = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$_REQUEST["dir"]);
 							
 						}
 						else {
