@@ -144,7 +144,7 @@ include 'panel/panelmodel.php';
 						//If a folder is received, use it
 						if(isset($_REQUEST["dir"])) {
 							//$folder = realpath($_REQUEST["dir"]); //Resolve path
-							$folder = str_replace("..","",$_REQUEST["dir"]);
+							$folder = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","",$_REQUEST["dir"]);
 							//Check if $folder is inside the user's folder
 							//If it isn't, don't use the received folder
 							//if(!strpos($folder,$_SESSION["userFolder"])) {
@@ -181,20 +181,10 @@ include 'panel/panelmodel.php';
 
 								case "move":
 									//Resolve paths
-									//$src = realpath("files/".$_SESSION["userFolder"]."/".$_POST["src"]);
-									//$dst = realpath("files/".$_SESSION["userFolder"]."/".$_POST["dst"]."/".basename($_POST["src"]));
-									$src = str_replace("..","","files/".$_SESSION["userFolder"]."/".$_POST["src"]);
-									$dst = str_replace("..","","files/".$_SESSION["userFolder"]."/".$_POST["dst"]."/".basename($_POST["src"]));
+									$src = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","","files/".$_SESSION["userFolder"]."/".$_POST["src"]);
+									$dst = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","","files/".$_SESSION["userFolder"]."/".$_POST["dst"]."/".basename($_POST["src"]));
 
-									//Check if both $src and $dst are within the user's folder
-									//If they are, perform action
-									//if(strpos($folder,$_SESSION["userFolder"]) && strpos($folder,$_SESSION["userFolder"])) {
-										$status = $panelModel->moveFile($src,$dst);
-									//}
-									//Otherwise, return error message
-									//else {
-									//	$status = "danger";
-									//}
+									$status = $panelModel->moveFile($src,$dst);
 									break;
 
 								case "invite":
