@@ -296,7 +296,7 @@ class Panel {
 										<td>
 											<!-- Borrar -->
 											<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteDir<?php echo $dirNum; ?>" name="action" value="delete">
-												<span class="fa fa-trash"><span class="fa fa-folder-open"></span>
+												<span class="fa fa-trash"></span>
 											</button>
 
 											<div class="modal fade" id="deleteDir<?php echo $dirNum; ?>" role="dialog">
@@ -314,7 +314,7 @@ class Panel {
 
 															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
 																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
-															<input type="hidden" name="dirToDelete" value="<?php echo $folder.$dir["dir"]; ?>"">
+															<input type="hidden" name="dirToDelete" value="<?php echo $folder."/".$dir["dir"]; ?>"">
 															<input type="hidden" name="action" value="deleteDir">
 															
 												          	<input type="submit" class="btn btn-danger" value="Eliminar">

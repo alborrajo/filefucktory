@@ -100,9 +100,9 @@ include 'panel/panelmodel.php';
 								default:
 									new Login("info","<strong>chiquitan</strong> chiquitin tan tan tan quetun pampam quetum pan que tepetepe tam tantan quetum pam quepin");
 									break;
-							}						
-							break;
+							}
 						}
+						break;
 
 					default:
 						new Login("info","Visite nuestra web afiliada:<br><a href='http://fucktorio.ddns.net' class='alert-link'>fucktorio</a>");
@@ -143,12 +143,20 @@ include 'panel/panelmodel.php';
 					
 						//If a folder is received, use it
 						if(isset($_REQUEST["dir"])) {
-							$folder = str_replace("../","",$_REQUEST["dir"]); //For security reasons, avoid users from putting ../ somewhere and escaping their folder
+							//Replaces /../, ^../ or /..$ with ""
+							//	foo/../bar	->	foo/bar
+							//	../bar		->	bar
+							//	foo/..		-> 	foo
+							//Useful to avoid escaping from $workDir
+							$folder = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$_REQUEST["dir"]);
+							
 						}
 						else {
 							$folder = "";
 						}
-					
+
+
+						
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {
 							$status = null;
@@ -172,7 +180,11 @@ include 'panel/panelmodel.php';
 									break;
 
 								case "move":
-									$status = $panelModel->moveFile($_POST["src"],$_POST["dst"]);
+									//Resolve paths
+									$src = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","","files/".$_SESSION["userFolder"]."/".$_POST["src"]);
+									$dst = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","","files/".$_SESSION["userFolder"]."/".$_POST["dst"]."/".basename($_POST["src"]));
+
+									$status = $panelModel->moveFile($src,$dst);
 									break;
 
 								case "invite":

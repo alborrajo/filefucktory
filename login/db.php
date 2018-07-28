@@ -2,55 +2,45 @@
 class DB {
 
 	function checkUser($email, $pass) {
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-		
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$queryResult = $manager->executeQuery('filefucktory.user', $query);
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
+		if(!$db) {return "danger";}
 
-		$queryArray = $queryResult->toArray();
-
-		//If there are no results
-		if(empty($queryArray)) {
-			return "warning";
-		}
-		//If there are
-		else {
-			foreach($queryArray as $user) {
-	
-				if(password_verify($pass, $user->password)) {
-					return "success";
-				}
-				else {
-					return "warning";
-				}
+		//Check entries for a match
+		foreach($db->users as $user) {
+			if($user->email == $email && password_verify($pass, $user->password)) {
+				return "success";
 			}
 		}
+
+		//If there are no results
+		return "warning";
 	}
 
 	function inviteUser($email) {	
-		//Check if user is already an existing user
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
 
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$result = $manager->executeQuery('filefucktory.user',$query);
-
-		if(!empty($result->toArray())) {
-			return "info";
+		//Check entries for a match (A user is already invited)
+		foreach($db->invites as $invite) {
+			if($invite->email == $email) {
+				return "info";
+			}
 		}
-		
-		//Check if user is already invited
-		$result = $manager->executeQuery('filefucktory.invited',$query);
 
-		if(!empty($result->toArray())) {
-			return "info";
+		//Check entries for a match (A user is already registered)
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				return "info";
+			}
 		}
 
 		//If not already invited, add invite
-		$query = new MongoDB\Driver\BulkWrite(['ordered'=>true]);
-		$query->insert(array("email"=>(string)$email));
-		$result = $manager->executeBulkWrite('filefucktory.invited', $query);
+		$newInvite = new stdClass();
+		$newInvite->email = $email;
 
-		if($result) {
+		//Write updated DB to file
+		if(array_push($db->invites, $newInvite) && file_put_contents("config/users.json",json_encode($db))) {
 			return "success";
 		} else {
 			return "danger";
@@ -59,56 +49,50 @@ class DB {
 	}
 
 	function newUser($panelModel, $email, $pass) {
-		//Check if there is already an user with that email
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-				
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$existingUser = $manager->executeQuery('filefucktory.user', $query);
-		
-		if(!empty($existingUser->toArray())) {
-			return "info";
-		}
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
 
-		//Check if the user is invited;
-		$invited = $manager->executeQuery('filefucktory.invited',$query);
-
-		if(empty($invited->toArray())) {
-			return "warning";
-		}
-
-		//Get OID to make folder
-		$folderName = $panelModel->getFolder($email);
-		
-		//Check dir or make user dir, and if that works, return success
-		if(is_dir('./files/'.$folderName) || mkdir('./files/'.$folderName) ) {
-			//If there isn't an user with that email, the folder exists, and has been invited, add user to DB
-			$data = array(
-				"email" => (string)$email,
-				"password" => (string)password_hash($pass, PASSWORD_DEFAULT),
-				"spacemb" => (string)"1024",
-			);
-			
-			//Add user to DB
-			$query = new MongoDB\Driver\BulkWrite(['ordered'=>true]);
-			$query->insert($data);
-			$result = $manager->executeBulkWrite('filefucktory.user', $query);
-
-			//Delete invite from DB
-			$query = new MongoDB\Driver\BulkWrite(['ordered'=>true]);
-			$query->delete(array("email"=>(string)$email));
-			$manager->executeBulkWrite('filefucktory.invited', $query);
-
-			if($result) {
-				return  "success";
+		//Check entries for a match (User already exists)
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				return "info";
 			}
-			else {
-				return "danger";
-			}
-		
-		}
-		else {
-			return "danger";
 		}
 
+		//Check entries for a match (User is invited)
+		foreach($db->invites as $invite) {
+			if($invite->email == $email) {
+				//Get folderName to make new folder
+				$folderName = $panelModel->getFolder($email);
+
+				//If there isn't an user with that email, the folder exists, and has been invited, add user to DB
+				if(is_dir('./files/'.$folderName) || mkdir('./files/'.$folderName,0770) ) {
+					//Load config file
+					$config = json_decode(file_get_contents("config/config.json"));
+
+					//Add new user to DB
+					$newUser = new stdClass();
+					$newUser->email = $email;
+					$newUser->password = password_hash($pass, PASSWORD_DEFAULT);
+					$newUser->spacemb = $config->defaultSpaceMB;
+
+					if(!array_push($db->users,$newUser)) {return "danger";} //Add new user, return error if it goes wrong
+
+					//Remove invite from DB
+					unset($invite);
+
+					//Write DB
+					if(file_put_contents("config/users.json",json_encode($db))) {
+						return "success";
+					}
+					else {
+						return "danger";
+					}
+				}
+			}
+		}
+
+		//If email is not invited
+		return "warning";
 	}
 }

@@ -7,11 +7,13 @@ class PanelModel {
 
 	function makeDir($relDir,$dirName) {
 		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDir."/".$dirName;
+		$dirPath = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$dirPath); //Avoid escaping (remove /../, ../, and /..)
 		if(mkdir($dirPath)) {return "success";} else {return "warning";}
 	}
 
 	function deleteDir($relDirPath) {
 		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
+		$src = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$src);
 		$this->rrmdir($src);
 		return "success";
 	}
@@ -34,9 +36,7 @@ class PanelModel {
 	}
 
 	function moveFile($relPath,$newRelPath) {
-		$src = "files/".$_SESSION["userFolder"]."/".str_replace("../","",$relPath);
-		$dst = "files/".$_SESSION["userFolder"]."/".str_replace("../","",$newRelPath)."/".basename($relPath);
-		if(rename($src,$dst)) {return "success";} else {return "warning";}
+		if(rename($relPath,$newRelPath)) {return "success";} else {return "warning";}
 	}
 			
 	function GetDirectorySize($path){
@@ -73,22 +73,22 @@ class PanelModel {
 		//Array $space
 		//	"usedmb": Folder size in mb
 		//	"spacemb": Max space in mb
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-				
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$queryResult = $manager->executeQuery('filefucktory.user', $query);
-
-		$queryArray = $queryResult->toArray();
 		
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
+
+		//Check entries for a match
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
+				$space = array("usedmb"=>$usedmb, "spacemb"=>$user->spacemb);
+			}
+		}
 		//If there are no results
-		if(empty($queryArray)) {
+		if(!isset($space)) {
 			return "warning";
 		}
-		//If there are
-		else {				
-			$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
-			$space = array("usedmb"=>$usedmb, "spacemb"=>$queryArray[0]->spacemb);
-		}
+		
 
 		//Array return:
 		//	"space": $space
@@ -98,63 +98,64 @@ class PanelModel {
 	}
 
 	function uploadFile($folder,$files,$email) {
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
+
 		//Check used space
 		$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
 		
-		//Check total space
-		$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-						
-		$query = new MongoDB\Driver\Query(array("email"=>(string)$email));				
-		$queryResult = $manager->executeQuery('filefucktory.user', $query);
-		
-		$queryArray = $queryResult->toArray();
-		if(!empty($queryArray)) {
-			$spacemb = $queryArray[0]->spacemb;
-		}
-		else {
-			return "danger";
+		//Check entries for a match (Get user folder space)
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				$spacemb = $user->spacemb;
+			}
 		}
 
-		//Check if used > total
-		if($usedmb > $spacemb) {
-			return "warningfull";
+		//If spacemb can't be found
+		if(!isset($spacemb)) {
+			header('Content-Type: application/json');
+			echo json_encode(array("status"=>"danger"));
+			exit;
 		}
-
 
 		$targetDir = "files/".$_SESSION["userFolder"].$folder."/";
+		$targetDir = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$targetDir);
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
 
 		if(pathinfo($files["fileToUpload"]["name"], PATHINFO_EXTENSION) == "php") {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"info"));
-			exit;
-			return "info";			
+			exit;		
 		}
 						
 		if(file_exists($targetFile)) {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"warning"));
 			exit;
-			return "warning";
+		}
+
+		if($usedmb > $spacemb) {
+			header('Content-Type: application/json');
+			echo json_encode(array("status"=>"warningfulll"));
+			exit;
 		}
 
 		if(move_uploaded_file($files["fileToUpload"]["tmp_name"], $targetFile)) {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"success"));
 			exit;
-			return "success";
 		}
 		else {
 			header('Content-Type: application/json');
 			echo json_encode(array("status"=>"danger"));
 			exit;
-			return "danger";
 		}
 		
 	}	
 
 	function deleteFile($relPath) {
 		$targetFile = "files/".$_SESSION["userFolder"].$relPath;
+		$targetFile = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$targetFile);
 		
 		//If its a directory
 		if(is_dir($targetFile)) {
