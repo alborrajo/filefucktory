@@ -314,7 +314,7 @@ class Panel {
 
 															<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
 																	//Manejar en el controlador la ruta relativa a la raiz de la web ?>
-															<input type="hidden" name="dirToDelete" value="<?php echo $folder.$dir["dir"]; ?>"">
+															<input type="hidden" name="dirToDelete" value="<?php echo $folder."/".$dir["dir"]; ?>"">
 															<input type="hidden" name="action" value="deleteDir">
 															
 												          	<input type="submit" class="btn btn-danger" value="Eliminar">
