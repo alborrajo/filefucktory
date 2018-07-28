@@ -143,12 +143,18 @@ include 'panel/panelmodel.php';
 					
 						//If a folder is received, use it
 						if(isset($_REQUEST["dir"])) {
-							$folder = str_replace("../","",$_REQUEST["dir"]); //For security reasons, avoid users from putting ../ somewhere and escaping their folder
+							$folder = realpath($_REQUEST["dir"]); //Resolve path
+
+							//Check if $folder is inside the user's folder
+							//If it isn't, don't use the received folder
+							if(!strpos($folder,$_SESSION["userFolder"])) {$folder="";}
 						}
 						else {
 							$folder = "";
 						}
-					
+
+
+						
 						//Comprobar si viene alguna accion
 						if(isset($_POST["action"])) {
 							$status = null;
@@ -172,7 +178,19 @@ include 'panel/panelmodel.php';
 									break;
 
 								case "move":
-									$status = $panelModel->moveFile($_POST["src"],$_POST["dst"]);
+									//Resolve paths
+									$src = realpath("files/".$_SESSION["userFolder"]."/".$_POST["src"]);
+									$dst = realpath("files/".$_SESSION["userFolder"]."/".$_POST["dst"]."/".basename($relPath));
+
+									//Check if both $src and $dst are within the user's folder
+									//If they are, perform action
+									if(strpos($folder,$_SESSION["userFolder"]) && strpos($folder,$_SESSION["userFolder"])) {
+										$status = $panelModel->moveFile($_POST["src"],$_POST["dst"]);
+									}
+									//Otherwise, return error message
+									else {
+										$status = "danger";
+									}
 									break;
 
 								case "invite":

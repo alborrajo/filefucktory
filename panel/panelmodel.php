@@ -34,8 +34,6 @@ class PanelModel {
 	}
 
 	function moveFile($relPath,$newRelPath) {
-		$src = "files/".$_SESSION["userFolder"]."/".str_replace("../","",$relPath);
-		$dst = "files/".$_SESSION["userFolder"]."/".str_replace("../","",$newRelPath)."/".basename($relPath);
 		if(rename($src,$dst)) {return "success";} else {return "warning";}
 	}
 			
