@@ -34,7 +34,7 @@ class PanelModel {
 	}
 
 	function moveFile($relPath,$newRelPath) {
-		if(rename($src,$dst)) {return "success";} else {return "warning";}
+		if(rename($relPath,$newRelPath)) {return "success";} else {return "warning";}
 	}
 			
 	function GetDirectorySize($path){
