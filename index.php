@@ -144,7 +144,7 @@ include 'panel/panelmodel.php';
 						//If a folder is received, use it
 						if(isset($_REQUEST["dir"])) {
 							//$folder = realpath($_REQUEST["dir"]); //Resolve path
-							$folder = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","",$_REQUEST["dir"]);
+							$folder = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/g","",$_REQUEST["dir"]);
 							//Check if $folder is inside the user's folder
 							//If it isn't, don't use the received folder
 							//if(!strpos($folder,$_SESSION["userFolder"])) {
