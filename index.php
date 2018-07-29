@@ -181,8 +181,8 @@ include 'panel/panelmodel.php';
 
 								case "move":
 									//Resolve paths
-									$src = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","","files/".$_SESSION["userFolder"]."/".$_POST["src"]);
-									$dst = preg_replace("\/\.\.\/|^\.\.\/|\/\.\.$","","files/".$_SESSION["userFolder"]."/".$_POST["dst"]."/".basename($_POST["src"]));
+									$src = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","","files/".$_SESSION["userFolder"]."/".$_POST["src"]);
+									$dst = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","","files/".$_SESSION["userFolder"]."/".$_POST["dst"]."/".basename($_POST["src"]));
 
 									$status = $panelModel->moveFile($src,$dst);
 									break;
