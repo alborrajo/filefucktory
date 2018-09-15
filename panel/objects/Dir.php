@@ -78,8 +78,8 @@ class Dir{
 				(<?php echo $this->getSizeString(); ?>)
 
 				<div class="btn-group pull-right">
-					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>">Subir <span class="fa fa-cloud-upload"></span></button>
-					<button type="button" class="btn" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
+					<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>">Subir <span class="fa fa-cloud-upload"></span></button>
+					<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
 				</div>
 
 				<div class="modal fade" id="upload<?php echo md5($this->path); ?>" role="dialog">
@@ -98,7 +98,7 @@ class Dir{
 								<input type="hidden" name="action" value="upload">
 
 								<label class="btn btn-default" for="file<?php echo md5($this->path); ?>">
-									Elegir fichero <input type="file" name="fileToUpload" id="file<?php echo md5($this->path); ?>" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
+									Elegir fichero <input type="file" name="file<?php echo md5($this->path); ?>" id="file<?php echo md5($this->path); ?>" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
 								</label>
 								<span class="label label-info" id="fileInfo"></span>
 
