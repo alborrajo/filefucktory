@@ -5,6 +5,23 @@ class PanelModel {
 		return md5($email);
 	}
 
+	function getSpace($email) {
+		//Load DB
+		$db = json_decode(file_get_contents("config/users.json"));
+
+		//Check entries for a match
+		foreach($db->users as $user) {
+			if($user->email == $email) {
+				$usedmb = $this->getSize($this->workDir)/1048576; //Bytes to MB
+				$space = array("usedmb"=>$usedmb, "spacemb"=>$user->spacemb);
+			}
+		}
+		//If there are no results
+		if(!isset($space)) {
+			return "warning";
+		}
+	}
+
 	function makeDir($relDir,$dirName) {
 		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDir."/".$dirName;
 		$dirPath = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$dirPath); //Avoid escaping (remove /../, ../, and /..)

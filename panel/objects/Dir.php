@@ -38,23 +38,6 @@ class Dir{
 			}
 		}
 
-		/*
-		//SPACE ARRAY
-		//Load DB
-		$db = json_decode(file_get_contents("config/users.json"));
-
-		//Check entries for a match
-		foreach($db->users as $user) {
-			if($user->email == $email) {
-				$usedmb = $this->getSize($this->workDir)/1048576; //Bytes to MB
-				$space = array("usedmb"=>$usedmb, "spacemb"=>$user->spacemb);
-			}
-		}
-		//If there are no results
-		if(!isset($space)) {
-			return "warning";
-		}
-		*/
 	}
 
 	function getSize(){
@@ -93,6 +76,112 @@ class Dir{
 					<?php echo $this->name; ?>
 				</a>
 				(<?php echo $this->getSizeString(); ?>)
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>">Subir <span class="fa fa-cloud-upload"></span></button>
+					<button type="button" class="btn pull-right" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
+				</div>
+
+				<div class="modal fade" id="upload<?php echo md5($this->path); ?>" role="dialog">
+					<div class="modal-dialog">
+					
+						<!-- Modal content-->
+						<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Subir fichero</h4>
+						</div>
+						<div class="modal-body">
+						
+							<form action="" method="post" enctype="multipart/form-data">
+								<input type="hidden" name="dir" value="<?php echo $this->relPath?>">	
+								<input type="hidden" name="action" value="upload">
+
+								<label class="btn btn-default" for="fileToUpload">
+									Elegir fichero <input type="file" name="fileToUpload" id="fileToUpload" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
+								</label>
+								<span class="label label-info" id="fileInfo"></span>
+
+								<div class="progress">
+									<div class="progress-bar progress-bar-striped active" style="width:0%" id="progressBar"></div>
+								</div>
+							
+								<input type="button" class="btn btn-primary" value="Subir" id="submit">
+
+								<script type="text/javascript">
+									var _submit = document.getElementById('submit'),
+										_file = document.getElementById('fileToUpload'),
+										_progress = document.getElementById('progressBar');
+
+									var upload = function() {
+
+										if(_file.files.length==0) {return;}
+										
+										var data = new FormData();
+										data.append('fileToUpload',_file.files[0]);
+										data.append('action',"upload");
+										data.append('dir',"<?php echo $this->relPath;?>");
+
+										var request = new XMLHttpRequest();
+										request.onreadystatechange = function(){
+											if(request.readyState == 4) {
+												console.log(request.responseText);
+												var status = JSON.parse(request.responseText).status;
+												location.href="./?action=upload&status="+status;
+											}
+										};
+
+										request.upload.addEventListener('progress',function(e){
+											_progress.style.width = Math.ceil((e.loaded/e.total)*100) + "%";
+										},false);
+
+										request.open('POST','./');
+										request.send(data);
+									}
+
+									_submit.addEventListener('click',upload);
+								</script>
+								
+							</form>
+							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+						</div>
+						</div>
+						
+					</div>
+				</div>
+
+				<div class="modal fade" id="makedir<?php echo md5($this->path); ?>" role="dialog">
+					<div class="modal-dialog">
+						
+						<!-- Modal content-->
+						<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4>Crear directorio</h4>
+						</div>
+						<div class="modal-body">
+							<form action="" method="post">
+								<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
+									//Manejar en el controlador la ruta relativa a la raiz de la web ?>
+								<input type="hidden" name="dir" value="<?php echo $this->relPath; ?>"">
+								<input type="hidden" name="action" value="makedir">
+									
+								Nombre del directorio:
+								<input type="text" name="dirName">
+									
+								<input type="submit" class="btn btn-primary" value="Crear">
+							</form>
+								
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+						</div>
+					</div>
+					</div>
+				</div>
 			</div>
 			
 			<div id="collapse<?php echo md5($this->path); ?>" class="panel-collapse collapse">

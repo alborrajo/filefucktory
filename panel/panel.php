@@ -200,7 +200,7 @@ class Panel {
 										<input type="hidden" name="action" value="makedir">
 											
 										Nombre del directorio:
-										<input type="text" name="dirName"></input>
+										<input type="text" name="dirName">
 											
 										<input type="submit" class="btn btn-primary" value="Crear">
 									</form>
@@ -216,10 +216,10 @@ class Panel {
 						<div class="pull-right" width="30%";>
 							<div class="label label-info">
 							<?php
-								$used = round($dir->space["usedmb"]); //Used space in MB
+								$used = round($_SESSION["space"]["usedmb"]); //Used space in MB
 								$usedString = $used." MB";
 								
-								$total = round($dir->space["spacemb"]); //Total space in MB
+								$total = round($_SESSION["space"]["spacemb"]); //Total space in MB
 								$totalString = $total." MB";
 
 								//Convert to GB if needed (with one digit after the dot)
