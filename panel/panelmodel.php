@@ -32,7 +32,11 @@ class PanelModel {
 
 	function deleteDir($relDirPath) {
 		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
-		$src = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$src);
+
+		if($relDirPath == "" || preg_match("/\/\.\.\/|^\.\.\/|\/\.\.$|\/.$/","/",$src)) {
+			return "danger";
+		}
+
 		$this->rrmdir($src);
 		return "success";
 	}
@@ -70,7 +74,7 @@ class PanelModel {
 	}
 	
 	function checkFolder(/*$folder,$email*/) {
-		return new Dir("files/".$_SESSION["userFolder"],"");
+		return new Dir("files/".$_SESSION["userFolder"],"",true);
 		/*
 		//Array $files:
 		//	"file": Filename
