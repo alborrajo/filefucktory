@@ -113,7 +113,7 @@ class Dir{
 										_file = document.getElementById('file<?php echo md5($this->path); ?>'),
 										_progress = document.getElementById('uploadBar<?php echo md5($this->path); ?>');
 
-									var upload = function() {
+									var upload<?php echo md5($this->path); ?> = function() {
 
 										if(_file.files.length==0) {return;}
 										
@@ -122,7 +122,7 @@ class Dir{
 										data.append('action',"upload");
 										data.append('dir',"<?php echo $this->relPath;?>");
 
-										console.log(data);
+										console.log(data.toString());
 
 										var request = new XMLHttpRequest();
 										request.onreadystatechange = function(){
@@ -141,7 +141,7 @@ class Dir{
 										request.send(data);
 									}
 
-									_submit.addEventListener('click<?php echo md5($this->path); ?>',upload);
+									_submit.addEventListener('click<?php echo md5($this->path); ?>',upload<?php echo md5($this->path); ?>);
 								</script>
 								
 							</form>
