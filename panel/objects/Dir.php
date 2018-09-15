@@ -98,7 +98,7 @@ class Dir{
 								<input type="hidden" name="action" value="upload">
 
 								<label class="btn btn-default" for="file<?php echo md5($this->path); ?>">
-									Elegir fichero <input type="file" name="file<?php echo md5($this->path); ?>" id="file<?php echo md5($this->path); ?>" style="display:none;" onchange="$('#fileInfo<?php echo md5($this->path); ?>').html(this.files[0].name)">
+									Elegir fichero <input type="file" name="fileToUpload" id="file<?php echo md5($this->path); ?>" style="display:none;" onchange="$('#fileInfo<?php echo md5($this->path); ?>').html(this.files[0].name)">
 								</label>
 								<span class="label label-info" id="fileInfo<?php echo md5($this->path); ?>"></span>
 
