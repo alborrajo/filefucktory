@@ -37,25 +37,31 @@ class PanelModel {
 
 		$src = "files/".$_SESSION["userFolder"]."/".preg_replace("/\/\.\.\/|^\ *\.\.\/|\/\.\.\ *$/","/",$relDirPath);
 
-		$this->rrmdir($src);
-		return "success";
+		return $this->rrmdir($src);
 	}
 
 	function rrmdir($src) {
+
+		//Open directory to delete, if unable, throw error
 		$dir = opendir($src);
+		if(!$dir) {return "danger";}
+
 		while(false !== ( $file = readdir($dir)) ) {
 			if (( $file != '.' ) && ( $file != '..' )) {
 				$full = $src . '/' . $file;
 				if ( is_dir($full) ) {
-					$this->rrmdir($full);
+					//Delete subfolder, if unable, throw error
+					if(!$this->rrmdir($full)) {return "danger";}
 				}
 				else {
-					unlink($full);
+					//Delete file, if unable, throw error
+					if(!unlink($full)) {return "danger";}
 				}
 			}
 		}
 		closedir($dir);
-		rmdir($src);
+		//Remove directory, if unable, throw error, if succcess, throw success
+		if(rmdir($src)) {return "success";} else {return "danger";}
 	}
 
 	function moveFile($relPath,$newRelPath) {
