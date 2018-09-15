@@ -106,10 +106,10 @@ class Dir{
 									<div class="progress-bar progress-bar-striped active" style="width:0%" id="uploadBar<?php echo md5($this->path); ?>"></div>
 								</div>
 							
-								<input type="button" class="btn btn-primary" value="Subir" id="submit">
+								<input type="button" class="btn btn-primary" value="Subir" id="submit<?php echo md5($this->path); ?>">
 
 								<script type="text/javascript">
-									var _submit = document.getElementById('submit'),
+									var _submit = document.getElementById('submit<?php echo md5($this->path); ?>'),
 										_file = document.getElementById('file<?php echo md5($this->path); ?>'),
 										_progress = document.getElementById('uploadBar<?php echo md5($this->path); ?>');
 
@@ -141,7 +141,7 @@ class Dir{
 										request.send(data);
 									}
 
-									_submit.addEventListener('click',upload);
+									_submit.addEventListener('click<?php echo md5($this->path); ?>',upload);
 								</script>
 								
 							</form>
