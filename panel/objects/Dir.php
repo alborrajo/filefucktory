@@ -77,9 +77,9 @@ class Dir{
 				</a>
 				(<?php echo $this->getSizeString(); ?>)
 
-				<div class="btn-group">
-					<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>">Subir <span class="fa fa-cloud-upload"></span></button>
-					<button type="button" class="btn pull-right" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
+				<div class="btn-group pull-right">
+					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>">Subir <span class="fa fa-cloud-upload"></span></button>
+					<button type="button" class="btn" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
 				</div>
 
 				<div class="modal fade" id="upload<?php echo md5($this->path); ?>" role="dialog">
@@ -97,8 +97,8 @@ class Dir{
 								<input type="hidden" name="dir" value="<?php echo $this->relPath?>">	
 								<input type="hidden" name="action" value="upload">
 
-								<label class="btn btn-default" for="fileToUpload">
-									Elegir fichero <input type="file" name="fileToUpload" id="fileToUpload" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
+								<label class="btn btn-default" for="file<?php echo md5($this->path); ?>">
+									Elegir fichero <input type="file" name="fileToUpload" id="file<?php echo md5($this->path); ?>" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
 								</label>
 								<span class="label label-info" id="fileInfo"></span>
 
@@ -110,7 +110,7 @@ class Dir{
 
 								<script type="text/javascript">
 									var _submit = document.getElementById('submit'),
-										_file = document.getElementById('fileToUpload'),
+										_file = document.getElementById('file<?php echo md5($this->path); ?>'),
 										_progress = document.getElementById('progressBar');
 
 									var upload = function() {
