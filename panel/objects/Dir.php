@@ -78,8 +78,8 @@ class Dir{
 				(<?php echo $this->getSizeString(); ?>)
 
 				<div class="btn-group pull-right">
-					<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>">Subir <span class="fa fa-cloud-upload"></span></button>
-					<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
+					<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>">Subir <span class="fa fa-cloud-upload"></span></button>
+					<button type="button" class="btn btn-xs" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>">Crear carpeta<span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
 				</div>
 
 				<div class="modal fade" id="upload<?php echo md5($this->path); ?>" role="dialog">
@@ -98,12 +98,12 @@ class Dir{
 								<input type="hidden" name="action" value="upload">
 
 								<label class="btn btn-default" for="file<?php echo md5($this->path); ?>">
-									Elegir fichero <input type="file" name="file<?php echo md5($this->path); ?>" id="file<?php echo md5($this->path); ?>" style="display:none;" onchange="$('#fileInfo').html(this.files[0].name)">
+									Elegir fichero <input type="file" name="file<?php echo md5($this->path); ?>" id="file<?php echo md5($this->path); ?>" style="display:none;" onchange="$('#fileInfo<?php echo md5($this->path); ?>').html(this.files[0].name)">
 								</label>
-								<span class="label label-info" id="fileInfo"></span>
+								<span class="label label-info" id="fileInfo<?php echo md5($this->path); ?>"></span>
 
 								<div class="progress">
-									<div class="progress-bar progress-bar-striped active" style="width:0%" id="progressBar"></div>
+									<div class="progress-bar progress-bar-striped active" style="width:0%" id="uploadBar<?php echo md5($this->path); ?>"></div>
 								</div>
 							
 								<input type="button" class="btn btn-primary" value="Subir" id="submit">
@@ -111,7 +111,7 @@ class Dir{
 								<script type="text/javascript">
 									var _submit = document.getElementById('submit'),
 										_file = document.getElementById('file<?php echo md5($this->path); ?>'),
-										_progress = document.getElementById('progressBar');
+										_progress = document.getElementById('uploadBar<?php echo md5($this->path); ?>');
 
 									var upload = function() {
 
