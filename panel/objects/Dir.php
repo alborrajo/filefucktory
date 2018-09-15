@@ -59,9 +59,9 @@ class Dir{
 
 	function getSize(){
 	    $bytestotal = 0;
-	    $this->path = realpath($this->path);
-	    if($this->path!==false && $this->path!='' && file_exists($this->path)){
-	        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS)) as $object){
+	    $path = realpath($this->path);
+	    if($path!==false && $path!='' && file_exists($path)){
+	        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
 	            $bytestotal += $object->getSize();
 	        }
 	    }
@@ -88,14 +88,14 @@ class Dir{
 		?>
 		<div class="panel panel-default">
 			<div class="panel panel-heading">
-				<a data-toggle="collapse" href="#collapse<?php echo $this->relPath; ?>">
+				<a data-toggle="collapse" href="#collapse<?php echo str_replace(array("'",'%'),array('%27',"'"),urlencode($this->path)); ?>">
 					<span class="fa fa-folder-open"></span>
 					<?php echo $this->name; ?>
 				</a>
 				(<?php echo $this->getSizeString(); ?>)
 			</div>
 			
-			<div id="collapse<?php echo $this->relPath; ?>" class="panel-collapse collapse">
+			<div id="collapse<?php echo str_replace(array("'",'%'),array('%27',"'"),urlencode($this->path)); ?>" class="panel-collapse collapse">
 				<div class="panel panel-body">
 					<ul class="list-group">
 						<?php
