@@ -32,7 +32,12 @@ class File{
 	}
 
 	function buildHTML() {
-		echo $this->name;
+		?>
+		<a href="<?php echo $this->path; ?>">
+			<?php echo $this->name; ?>
+		</a>
+		(<?php echo $this->getSizeString(); ?>)
+		<?php
 	}
 }
 ?>
