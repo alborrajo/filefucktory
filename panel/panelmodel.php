@@ -50,8 +50,9 @@ class PanelModel {
 	    return $bytestotal;
 	}
 	
-	function checkFolder($folder,$email) {
-	
+	function checkFolder(/*$folder,$email*/) {
+		return new Dir("files/".$_SESSION["userFolder"],"");
+		/*
 		//Array $files:
 		//	"file": Filename
 		//	"size": Filesize
@@ -69,25 +70,6 @@ class PanelModel {
 				array_push($files, array("file"=>$file, "size"=>filesize("files/".$_SESSION["userFolder"]."/".$folder."/".$file) ));
 			}
 		}
-
-		//Array $space
-		//	"usedmb": Folder size in mb
-		//	"spacemb": Max space in mb
-		
-		//Load DB
-		$db = json_decode(file_get_contents("config/users.json"));
-
-		//Check entries for a match
-		foreach($db->users as $user) {
-			if($user->email == $email) {
-				$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
-				$space = array("usedmb"=>$usedmb, "spacemb"=>$user->spacemb);
-			}
-		}
-		//If there are no results
-		if(!isset($space)) {
-			return "warning";
-		}
 		
 
 		//Array return:
@@ -95,6 +77,7 @@ class PanelModel {
 		//	"files": $files
 		//	"dirs":  $dirs
 		return array("space"=>$space,"files"=>$files,"dirs"=>$dirs);
+		*/
 	}
 
 	function uploadFile($folder,$files,$email) {
