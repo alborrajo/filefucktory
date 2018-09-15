@@ -109,16 +109,16 @@ class Dir{
 								<input type="button" class="btn btn-primary" value="Subir" id="submit<?php echo md5($this->path); ?>">
 
 								<script type="text/javascript">
-									var _submit = document.getElementById('submit<?php echo md5($this->path); ?>'),
-										_file = document.getElementById('file<?php echo md5($this->path); ?>'),
-										_progress = document.getElementById('uploadBar<?php echo md5($this->path); ?>');
+									var _submit<?php echo md5($this->path); ?> = document.getElementById('submit<?php echo md5($this->path); ?>'),
+										_file<?php echo md5($this->path); ?> = document.getElementById('file<?php echo md5($this->path); ?>'),
+										_progress<?php echo md5($this->path); ?> = document.getElementById('uploadBar<?php echo md5($this->path); ?>');
 
 									var upload<?php echo md5($this->path); ?> = function() {
 
-										if(_file.files.length==0) {return;}
+										if(_file<?php echo md5($this->path); ?>.files.length==0) {return;}
 										
 										var data = new FormData();
-										data.append('fileToUpload',_file.files[0]);
+										data.append('fileToUpload',_file<?php echo md5($this->path); ?>.files[0]);
 										data.append('action',"upload");
 										data.append('dir',"<?php echo $this->relPath;?>");
 
@@ -134,14 +134,14 @@ class Dir{
 										};
 
 										request.upload.addEventListener('progress',function(e){
-											_progress.style.width = Math.ceil((e.loaded/e.total)*100) + "%";
+											_progress<?php echo md5($this->path); ?>.style.width = Math.ceil((e.loaded/e.total)*100) + "%";
 										},false);
 
 										request.open('POST','./');
 										request.send(data);
 									}
 
-									_submit.addEventListener('click<?php echo md5($this->path); ?>',upload<?php echo md5($this->path); ?>);
+									_submit<?php echo md5($this->path); ?>.addEventListener('click',upload<?php echo md5($this->path); ?>);
 								</script>
 								
 							</form>
