@@ -26,6 +26,7 @@ include 'panel/panelmodel.php';
 								$_SESSION["email"] = $_POST["email"];
 								$_SESSION["password"] = $_POST["passwordHash"];
 								$_SESSION["userFolder"] = $panelModel->getFolder($_POST["email"]);
+								$_SESSION["space"] = $panelModel->getSpace($_POST["email"]);
 								header("Location: ./?");
 								break;
 								
