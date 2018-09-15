@@ -31,11 +31,11 @@ class PanelModel {
 	}
 
 	function deleteDir($relDirPath) {
-		if($relDirPath == "" || preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$relDirPath)) {
+		if($relDirPath == "") {
 			return "danger";
 		}
 
-		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
+		$src = "files/".$_SESSION["userFolder"]."/".preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$relDirPath);
 
 		$this->rrmdir($src);
 		return "success";
