@@ -88,14 +88,14 @@ class Dir{
 		?>
 		<div class="panel panel-default">
 			<div class="panel panel-heading">
-				<a data-toggle="collapse" href="#collapse<?php echo urlencode($this->path); ?>">
+				<a data-toggle="collapse" href="#collapse<?php echo rawurlencode($this->path); ?>">
 					<span class="fa fa-folder-open"></span>
 					<?php echo $this->name; ?>
 				</a>
 				(<?php echo $this->getSizeString(); ?>)
 			</div>
 			
-			<div id="collapse<?php echo urlencode($this->path); ?>" class="panel-collapse collapse">
+			<div id="collapse<?php echo rawurlencode($this->path); ?>" class="panel-collapse collapse">
 				<div class="panel panel-body">
 					<ul class="list-group">
 						<?php
