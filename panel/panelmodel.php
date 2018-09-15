@@ -20,6 +20,8 @@ class PanelModel {
 		if(!isset($space)) {
 			return "warning";
 		}
+
+		return $space;
 	}
 
 	function makeDir($relDir,$dirName) {
