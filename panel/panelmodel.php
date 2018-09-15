@@ -42,8 +42,6 @@ class PanelModel {
 	}
 
 	function rrmdir($src) {
-		var_dump($src);
-		exit;
 		$dir = opendir($src);
 		while(false !== ( $file = readdir($dir)) ) {
 			if (( $file != '.' ) && ( $file != '..' )) {
