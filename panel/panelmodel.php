@@ -33,7 +33,7 @@ class PanelModel {
 	function deleteDir($relDirPath) {
 		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
 
-		if($relDirPath == "" || preg_match("/\/\.\.\/|^\.\.\/|\/\.\.$|\/.$/","/",$src)) {
+		if($relDirPath == "" || preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$|\/.$/","/",$src)) {
 			return "danger";
 		}
 
