@@ -35,7 +35,7 @@ class PanelModel {
 			return "danger";
 		}
 
-		$src = "files/".$_SESSION["userFolder"]."/".preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$relDirPath);
+		$src = "files/".$_SESSION["userFolder"]."/".preg_replace("/\/\.\.\/|^\ *\.\.\/|\/\.\.\ *$/","/",$relDirPath);
 
 		$this->rrmdir($src);
 		return "success";
