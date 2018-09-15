@@ -327,13 +327,13 @@ include 'panel/panelmodel.php';
 							}
 							
 							$panelModel = new PanelModel();
-							new Panel($folder,$panelModel->checkFolder($folder,$_SESSION["email"]),$msgstatus,$msgtext);				
+							new Panel($panelModel->checkFolder(),$msgstatus,$msgtext);				
 						}
 						
 						//Si no, mostrar panel
 						else {
 							$panelModel = new PanelModel();
-							new Panel($folder,$panelModel->checkFolder($folder,$_SESSION["email"]),null,null);
+							new Panel($panelModel->checkFolder(),null,null);
 						}
 						
 						break;
