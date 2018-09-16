@@ -104,29 +104,6 @@ class Panel {
 				?>
 
 				<h2>Ficheros</h2>
-				<div class="label label-info"> <!-- Used space label -->
-				<?php
-					$used = round($_SESSION["space"]["usedmb"]); //Used space in MB
-					$usedString = $used." MB";
-					
-					$total = round($_SESSION["space"]["spacemb"]); //Total space in MB
-					$totalString = $total." MB";
-
-					//Convert to GB if needed (with one digit after the dot)
-					//Used space
-					if($used >= 1024)  {
-						$used = round($used/1024, 1);
-						$usedString = $used." GB";
-					}
-					//Free space
-					if($total >= 1024) {
-						$total = round($total/1024, 1);
-						$totalString = $total." GB";
-					}
-	
-					echo $usedString . " / " . $totalString;
-				?>
-				</div>
 					
 				<!-- Panel -->
 				<?php $dir->buildHTML(); ?>

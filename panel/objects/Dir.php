@@ -15,12 +15,13 @@ class Dir{
 	public $path;
 
 	public $bytes;
+	public $maxSpaceMB;
 
 	public $lsDirs;
 	public $lsFiles;
 
 
-	function __construct($workDir,$relPath,$rootDir) {
+	function __construct($workDir,$relPath,$maxSpaceMB,$rootDir) {
 
 		$this->rootDir = $rootDir; //Is this directory the root directory?
 
@@ -30,6 +31,7 @@ class Dir{
 		$this->path = $workDir."/".$relPath; //absolute path from index.php folder
 		
 		$this->bytes = Dir::getSize();
+		$this->maxSpaceMB = $maxSpaceMB;
 		
 		$this->lsDirs = array();
 		$this->lsFiles = array();
@@ -84,7 +86,22 @@ class Dir{
 					<span class="fa fa-folder-open"></span>
 					<?php echo $this->name; ?>
 				</a>
-				(<?php echo $this->getSizeString(); ?>)
+				(<?php
+					if(!$this->rootDir) {
+						echo $this->getSizeString();
+					}
+					else {
+						
+						if($this->maxSpaceMB > 1024) {
+							$displaySpace = round($this->maxSpaceMB/1024,2)." GB"; //Round with 2 decimals
+						}
+						else {
+							$displaySpace = round($this->maxSpaceMB)." MB";
+						}
+
+						echo $this->getSizeString()." / ".$displaySpace;
+					}
+				?>)
 
 				<div class="btn-group pull-right">
 					<!-- Upload -->	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#upload<?php echo md5($this->path); ?>"><span class="fa fa-cloud-upload"></span></button>

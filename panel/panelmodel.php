@@ -12,8 +12,7 @@ class PanelModel {
 		//Check entries for a match
 		foreach($db->users as $user) {
 			if($user->email == $email) {
-				$usedmb = $this->GetDirectorySize("files/".$_SESSION["userFolder"])/1048576; //Bytes to MB
-				$space = array("usedmb"=>$usedmb, "spacemb"=>$user->spacemb);
+				$space = $user->spacemb;
 			}
 		}
 		//If there are no results
@@ -80,7 +79,7 @@ class PanelModel {
 	}
 	
 	function checkFolder(/*$folder,$email*/) {
-		return new Dir("files/".$_SESSION["userFolder"],"",true);
+		return new Dir("files/".$_SESSION["userFolder"],"",$_SESSION["spacemb"],true);
 		/*
 		//Array $files:
 		//	"file": Filename
