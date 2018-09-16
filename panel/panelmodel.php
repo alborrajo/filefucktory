@@ -79,7 +79,7 @@ class PanelModel {
 	}
 	
 	function checkFolder(/*$folder,$email*/) {
-		return new Dir("files/".$_SESSION["userFolder"],"",$_SESSION["space"],true);
+		return new Dir("files/".$_SESSION["userFolder"],"",$_SESSION["spacemb"],true);
 		/*
 		//Array $files:
 		//	"file": Filename
