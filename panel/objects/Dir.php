@@ -42,7 +42,7 @@ class Dir{
 		$ls = array_diff( scandir($workDir."/".$relPath), array('..','.')); //Don't add . and .. to the file list
 		foreach($ls as $file) {
 			if(is_dir($workDir."/".$relPath."/".$file)) {
-				array_push($this->lsDirs, new Dir($workDir,$this->relPath."/".$file,$this->maxSpaceMB,,false));
+				array_push($this->lsDirs, new Dir($workDir,$this->relPath."/".$file,$this->maxSpaceMB,false));
 			}
 			else {
 				array_push($this->lsFiles, new File($workDir,$this->relPath."/".$file));
