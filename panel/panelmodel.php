@@ -1,6 +1,10 @@
 <?php
 class PanelModel {
 
+	function isValidPath($path) {
+		return !preg_match("/\/\.\.\/|^\ *\.\.\/|\/\.\.\ *$/",$path)
+	}
+
 	function getFolder($email) {
 		return md5($email);
 	}
@@ -25,16 +29,18 @@ class PanelModel {
 
 	function makeDir($relDir,$dirName) {
 		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDir."/".$dirName;
-		$dirPath = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$dirPath); //Avoid escaping (remove /../, ../, and /..)
+		if(!this->isValidPath($dirPath)) {return "danger";}
 		if(mkdir($dirPath)) {return "success";} else {return "warning";}
 	}
 
 	function deleteDir($relDirPath) {
-		if($relDirPath == "") {
-			return "danger";
-		}
+		//If path is empty or ., ./, /., etc. throw error
+		if($relDirPath == "" || preg_match("^\.\/?$|^\/?\.$",$relDirPath) {return "danger";}
 
-		$src = "files/".$_SESSION["userFolder"]."/".preg_replace("/\/\.\.\/|^\ *\.\.\/|\/\.\.\ *$/","/",$relDirPath);
+		//If path isn't valid throw error
+		if(!this->isValidPath($relDirPath)) {return "danger";}
+
+		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
 
 		return $this->rrmdir($src);
 	}
@@ -80,32 +86,6 @@ class PanelModel {
 	
 	function checkFolder(/*$folder,$email*/) {
 		return new Dir("files/".$_SESSION["userFolder"],"",$_SESSION["spacemb"],true);
-		/*
-		//Array $files:
-		//	"file": Filename
-		//	"size": Filesize
-		//Array $dirs:
-		//	"dir": Directory
-		//	"size": Dir size
-		$files = array();
-		$dirs = array();
-		$ls = array_diff( scandir("files/".$_SESSION["userFolder"]."/".$folder), array('..','.')); 
-		foreach($ls as $file) {
-			if(is_dir("files/".$_SESSION["userFolder"]."/".$folder."/".$file)) {
-				array_push($dirs, array("dir"=>$file, "size"=>$this->GetDirectorySize("files/".$_SESSION["userFolder"]."/".$folder."/".$file) ));
-			}
-			else {
-				array_push($files, array("file"=>$file, "size"=>filesize("files/".$_SESSION["userFolder"]."/".$folder."/".$file) ));
-			}
-		}
-		
-
-		//Array return:
-		//	"space": $space
-		//	"files": $files
-		//	"dirs":  $dirs
-		return array("space"=>$space,"files"=>$files,"dirs"=>$dirs);
-		*/
 	}
 
 	function uploadFile($folder,$files,$email) {
@@ -129,8 +109,9 @@ class PanelModel {
 			exit;
 		}
 
+		if(!this->isValidPath($folder)) {return "danger";}
+
 		$targetDir = "files/".$_SESSION["userFolder"].$folder."/";
-		$targetDir = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$targetDir);
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
 
 		if(pathinfo($files["fileToUpload"]["name"], PATHINFO_EXTENSION) == "php") {
@@ -165,8 +146,9 @@ class PanelModel {
 	}	
 
 	function deleteFile($relPath) {
+		
+		if(!this->isValidPath($relPath)) {return "danger";}
 		$targetFile = "files/".$_SESSION["userFolder"].$relPath;
-		$targetFile = preg_replace("/\/\.\.\/|^\.\.\/|\/\.\.$/","/",$targetFile);
 		
 		//If its a directory
 		if(is_dir($targetFile)) {
