@@ -2,7 +2,7 @@
 class PanelModel {
 
 	function isValidPath($path) {
-		return !preg_match("/\/\.\.\/|^\ *\.\.\/|\/\.\.\ *$/",$path)
+		return !preg_match("/\/\.\.\/|^\ *\.\.\/|\/\.\.\ *$/",$path);
 	}
 
 	function getFolder($email) {
@@ -146,7 +146,7 @@ class PanelModel {
 	}	
 
 	function deleteFile($relPath) {
-		
+
 		if(!this->isValidPath($relPath)) {return "danger";}
 		$targetFile = "files/".$_SESSION["userFolder"].$relPath;
 		
