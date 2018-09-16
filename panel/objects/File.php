@@ -101,6 +101,7 @@ class File{
 				
 			</div>
 		</div>
+		<?php
 	}
 }
 ?>
