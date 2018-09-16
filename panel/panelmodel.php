@@ -29,7 +29,7 @@ class PanelModel {
 
 	function makeDir($relDir,$dirName) {
 		$dirPath = "files/".$_SESSION["userFolder"]."/".$relDir."/".$dirName;
-		if(!this->isValidPath($dirPath)) {return "danger";}
+		if(!$this->isValidPath($dirPath)) {return "danger";}
 		if(mkdir($dirPath)) {return "success";} else {return "warning";}
 	}
 
@@ -38,7 +38,7 @@ class PanelModel {
 		if($relDirPath == "" || preg_match("^\.\/?$|^\/?\.$",$relDirPath) {return "danger";}
 
 		//If path isn't valid throw error
-		if(!this->isValidPath($relDirPath)) {return "danger";}
+		if(!$this->isValidPath($relDirPath)) {return "danger";}
 
 		$src = "files/".$_SESSION["userFolder"]."/".$relDirPath;
 
@@ -109,7 +109,7 @@ class PanelModel {
 			exit;
 		}
 
-		if(!this->isValidPath($folder)) {return "danger";}
+		if(!$this->isValidPath($folder)) {return "danger";}
 
 		$targetDir = "files/".$_SESSION["userFolder"].$folder."/";
 		$targetFile = $targetDir.basename($files["fileToUpload"]["name"]);
@@ -147,7 +147,7 @@ class PanelModel {
 
 	function deleteFile($relPath) {
 
-		if(!this->isValidPath($relPath)) {return "danger";}
+		if(!$this->isValidPath($relPath)) {return "danger";}
 		$targetFile = "files/".$_SESSION["userFolder"].$relPath;
 		
 		//If its a directory
