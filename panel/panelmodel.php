@@ -35,7 +35,7 @@ class PanelModel {
 
 	function deleteDir($relDirPath) {
 		//If path is empty or ., ./, /., etc. throw error
-		if($relDirPath == "" || preg_match("^\/?\.\/?$",$relDirPath)) {return "danger";}
+		if($relDirPath == "" || preg_match("^\/?\.\/?$|^\/+$",$relDirPath)) {return "danger";}
 
 		//If path isn't valid throw error
 		if(!$this->isValidPath($relDirPath)) {return "danger";}
