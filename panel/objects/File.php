@@ -52,7 +52,7 @@ class File{
 				<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4>Eliminar <?php echo $file["file"]; ?></h4>
+					<h4>Eliminar <?php echo $this->name; ?></h4>
 				</div>
 				<div class="modal-body">
 				
@@ -60,7 +60,7 @@ class File{
 
 						<?php //Por seguridad, poner como value la ruta relativa a la carpeta del usuario
 								//Manejar en el controlador la ruta relativa a la raiz de la web ?>
-						<input type="hidden" name="file" value="<?php echo $this->path; ?>"">
+						<input type="hidden" name="file" value="<?php echo $this->relPath; ?>"">
 						<input type="hidden" name="action" value="delete">
 						
 						<input type="submit" class="btn btn-danger" value="Eliminar">
