@@ -282,7 +282,15 @@ class Dir{
 
 
 			<!-- Show directories and files inside folder -->
-			<div id="collapse<?php echo md5($this->path); ?>" class="panel-collapse collapse">
+			<?php 
+			//If it's the root directory, show panel uncollapsed by default
+			if($this->rootDir) {
+			?><div id="collapse<?php echo md5($this->path); ?>" class="panel-collapse collapse in"><?php
+			}
+			else {
+			?><div id="collapse<?php echo md5($this->path); ?>" class="panel-collapse collapse"><?php
+			}
+			?>
 				<div class="panel panel-body">
 					<ul class="list-group">
 						<?php
