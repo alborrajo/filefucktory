@@ -107,6 +107,39 @@ class Panel {
 					
 				<!-- Panel -->
 				<?php $dir->buildHTML(); ?>
+
+
+				<!-- MOVE MODAL -->
+				<script>
+					function setMoveSource(destination) {
+						return $('.moveSRC').val(destination);
+					}
+				</script>
+				<div class="modal fade" id="move" role="dialog">
+					<div class="modal-dialog">
+					
+						<!-- Modal content-->
+						<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4>Mover</h4>
+						</div>
+						<div class="modal-body">
+
+							<div class="panel-group">
+								<div class="panel panel-default">
+									<?php $dir->buildMoveHTML(); ?>
+								</div>
+							</div>
+							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+						</div>
+						</div>
+						
+					</div>
+				</div>
 		
 			</div>
 

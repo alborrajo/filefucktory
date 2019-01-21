@@ -41,7 +41,7 @@ class File{
 
 		<div class="btn-group pull-right">
 			<!-- Delete -->	<button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delete<?php echo md5($this->path); ?>"><span class="fa fa-trash"></span></button>
-			<!-- Mover -->	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#move<?php echo md5($this->path); ?>"><span class="fa fa-share"></button>
+			<!-- Mover -->	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#move" onclick="setMoveSource('<?php echo $this->relPath; ?>');"><span class="fa fa-share"></button>
 		</div>
 
 		<!-- DELETE MODAL -->
@@ -75,32 +75,7 @@ class File{
 			</div>
 		</div>
 
-		<!-- MOVE MODAL -->
-		<div class="modal fade" id="move<?php echo md5($this->path); ?>" role="dialog">
-			<div class="modal-dialog">
-			
-				<!-- Modal content-->
-				<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4>Mover <?php echo $this->name; ?></h4>
-				</div>
-				<div class="modal-body">
-
-					<div class="panel-group">
-						<div class="panel panel-default">
-							<h1>YA MAÑANA</h1> <!-- TODO -->
-						</div>
-					</div>
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
-				</div>
-				</div>
-				
-			</div>
-		</div>
+		
 		<?php
 	}
 }

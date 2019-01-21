@@ -78,6 +78,30 @@ class Dir{
 		}
 	}
 
+	function buildMoveHTML() {
+		?>
+		<form action="" method="post">
+			<input type="hidden" name="action" value="move">
+			<input class="moveSRC" type="hidden" name="src" value="">
+			<input type="hidden" name="dst" value="<?php echo $this->relPath; ?>">
+			<button type="submit" class="btn btn-primary">
+				<span class="fa fa-folder-open"></span>
+				<?php echo $this->name; ?>
+			</button>
+		</form>
+		
+		<?php if($this->lsDirs != null) { ?>
+			<ul class="list-group">
+				<?php foreach($this->lsDirs as $dir) { ?>
+					<li class="list-group-item">
+						<?php $dir->buildMoveHTML(); ?>
+					</li>
+				<?php } ?>
+			</ul>
+		<?php } ?>
+		<?php
+	}
+
 	function buildHTML() {
 		?>
 		<div class="panel panel-default">
@@ -108,7 +132,7 @@ class Dir{
 					<!-- mkdir -->	<button type="button" class="btn btn-xs" data-toggle="modal" data-target="#makedir<?php echo md5($this->path); ?>"><span class="fa fa-plus-circle"></span><span class="fa fa-folder-open"></span></button>
 					<?php if(!$this->rootDir) { ?>
 					<!-- Delete -->	<button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#deleteDir<?php echo md5($this->path); ?>"><span class="fa fa-trash"></span></button>
-					<!-- Mover -->	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#moveDir<?php echo md5($this->path); ?>"><span class="fa fa-share"></button>
+					<!-- Mover -->	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#move" onclick="setMoveSource('<?php echo $this->relPath; ?>');"><span class="fa fa-share"></button>
 					<?php } ?>
 				</div>
 
@@ -250,33 +274,6 @@ class Dir{
 				</div>
 			</div>
 
-
-			<!-- MOVE MODAL -->
-			<div class="modal fade" id="moveDir<?php echo md5($this->path); ?>" role="dialog">
-				<div class="modal-dialog">
-				
-					<!-- Modal content-->
-					<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4>Mover <?php echo $this->name; ?></h4>
-					</div>
-					<div class="modal-body">
-
-						<div class="panel-group">
-							<div class="panel panel-default">
-								<h1>YA MAÑANA</h1> <!-- TODO -->
-							</div>
-						</div>
-						
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
-					</div>
-					</div>
-					
-				</div>
-			</div>
 			<?php } ?>
 
 
