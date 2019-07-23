@@ -1,0 +1,8 @@
+{
+	"port": 6480,
+	"database": "./db/filefucktory.db",
+	"userFilesFolder": "./files",
+	
+	"defaultMaxSpace": 1073742000,
+	"defaultMaxInvites": 10
+}

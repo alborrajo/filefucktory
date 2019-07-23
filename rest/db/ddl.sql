@@ -1,0 +1,20 @@
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Invite;
+
+CREATE TABLE User (
+	username TEXT PRIMARY KEY,
+	password TEXT NOT NULL,
+	
+	folder TEXT UNIQUE NOT NULL,
+	
+	maxSpace INTEGER NOT NULL DEFAULT 1073742000,	-- Default: 1 GiB
+	maxInvites INTEGER NOT NULL DEFAULT 10,
+	
+	invitedBy INTEGER REFERENCES Invite(inviteID)
+);
+
+CREATE TABLE Invite (
+	inviteID INTEGER PRIMARY KEY,
+	
+	sentBy TEXT NOT NULL REFERENCES User(email)
+);

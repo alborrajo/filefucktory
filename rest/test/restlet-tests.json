@@ -1,0 +1,499 @@
+{
+  "front-version": "2.19.2",
+  "version": 3,
+  "nodes": [
+    {
+      "type": "Project",
+      "id": "751cca97-6a55-4320-8385-72306cf85bfa",
+      "lastModified": "2019-07-22T10:25:38.958+02:00",
+      "name": "Filefucktory"
+    },
+    {
+      "type": "Scenario",
+      "description": "",
+      "id": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64",
+      "lastModified": "2019-07-22T10:25:43.424+02:00",
+      "name": "Log in, add invite, register",
+      "requestOrder": [
+        "/user without auth",
+        "/user with auth",
+        "/user/invites without auth",
+        "/user/invites",
+        "add Invite without auth",
+        "add Invite",
+        "get invite",
+        "use invite invalid data",
+        "use invite"
+      ],
+      "parentId": "751cca97-6a55-4320-8385-72306cf85bfa"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/"
+      },
+      "description": "",
+      "id": "2b6de7b6-87fb-4254-b8e0-2f6242a8972d",
+      "lastModified": "2019-07-22T10:04:38.034+02:00",
+      "name": "/user without auth",
+      "headers": [],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "401"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/"
+      },
+      "id": "f37ef000-ab31-4701-932a-3310c70f8b71",
+      "lastModified": "2019-07-22T10:06:10.002+02:00",
+      "name": "/user with auth",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic YWRtaW46YWRtaW4="
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Contains",
+          "subject": "ResponseJsonBody",
+          "path": "$",
+          "value": "username"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/invites"
+      },
+      "id": "5777879a-583e-405f-afb1-1e52ec7d1772",
+      "lastModified": "2019-07-22T10:06:34.691+02:00",
+      "name": "/user/invites without auth",
+      "headers": [],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "401"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": null
+      },
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/invites"
+      },
+      "id": "6278d8a6-359f-4091-b1c7-d704d0ec29e4",
+      "lastModified": "2019-07-22T10:07:07.411+02:00",
+      "name": "/user/invites",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic YWRtaW46YWRtaW4="
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": null
+      },
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/invites"
+      },
+      "id": "e00ed220-eca9-42ad-8896-8a04fa2389bd",
+      "lastModified": "2019-07-22T10:08:16.645+02:00",
+      "name": "add Invite without auth",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "401"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": null
+      },
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/invites"
+      },
+      "id": "d31227cc-4a76-4e03-a1f0-ea78922f9eee",
+      "lastModified": "2019-07-22T10:08:38.176+02:00",
+      "name": "add Invite",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic YWRtaW46YWRtaW4="
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "201"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.inviteID",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/invites/${\"Filefucktory\".\"Log in, add invite, register\".\"add Invite\".\"response\".\"body\".\"inviteID\"}"
+      },
+      "id": "388690b0-4779-484d-a718-934bc381cc4e",
+      "lastModified": "2019-07-22T10:10:24.661+02:00",
+      "name": "get invite",
+      "headers": [],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Equals",
+          "subject": "ResponseJsonBody",
+          "path": "$.inviteID",
+          "value": "${\"Filefucktory\".\"Log in, add invite, register\".\"add Invite\".\"response\".\"body\".\"inviteID\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"huah\": \"huah\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/invites/${\"Filefucktory\".\"Log in, add invite, register\".\"add Invite\".\"response\".\"body\".\"inviteID\"}"
+      },
+      "id": "22f26dce-ecfb-4b3d-a3e7-68a606719a37",
+      "lastModified": "2019-07-22T10:11:51.885+02:00",
+      "name": "use invite invalid data",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "400"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": null
+      },
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": ${random().base64().string(\"\\\"\")},\n\t\"password\": ${random().base64().string(\"\\\"\")}\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:6480",
+        "path": "/user/invites/${\"Filefucktory\".\"Log in, add invite, register\".\"add Invite\".\"response\".\"body\".\"inviteID\"}"
+      },
+      "id": "90e9c57e-8092-40dc-8ff0-2848cdf9840c",
+      "lastModified": "2019-07-22T10:19:54.968+02:00",
+      "name": "use invite",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "201"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.username",
+          "value": "${\"Filefucktory\".\"Log in, add invite, register\".\"use invite\".\"request\".\"body\".\"username\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5e5ae2c0-8bdb-4620-aa63-a8b65ba57d64"
+    }
+  ]
+}
