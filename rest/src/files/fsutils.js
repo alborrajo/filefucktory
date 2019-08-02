@@ -2,8 +2,6 @@
 //
 const path = require('path');
 const fs = require('fs').promises;
-
-const pathIsInside = require("path-is-inside");
 const rimraf = require("rimraf");
 
 const config = require('../../config/config.json');
@@ -16,8 +14,8 @@ function errorHandler(err, req, res, next) {
 	console.log(JSON.stringify(err));
 	
 	const customErrors = {
-		"Relative path":		400,	// Path contains .. or . or some unsafe relative fuckery
 		"Undefined path": 	400,	// Undefined path
+		"File exists":		400,	// Already exists
 	}
 	
 	if(err in customErrors) {
@@ -114,26 +112,15 @@ async function readPath(pathToRead) {
 }
 
 // Creates a new directory on the path specified, with the name specified
-async function mkdir(pathToNewDir, newDirName, userFolder) {
+async function mkdir(pathToNewDir, newDirName) {
 	const fullPath = path.normalize(pathToNewDir+"/"+newDirName);
-	const userFolderPath = path.normalize(config.userFilesFolder+"/"+userFolder);
-	
-	// Throw exception if any of the parts is null or undefined
-	if(!newDirName) {throw "Undefined path";}
-	
-	// Check if the path contains .. and if so, throw exception to avoid unsafe relative operations
-	if(!pathIsInside(fullPath, userFolderPath)) {throw "Relative path";}
 	
 	return fs.mkdir(fullPath);
 }
 
 // Deletes a directory
-async function rmdir(pathToDelete, userFolder) {
+async function rmdir(pathToDelete) {
 	const fullPath = path.normalize(pathToDelete);
-	const userFolderPath = path.normalize(config.userFilesFolder+"/"+userFolder);
-	
-	// Check if the path contains .. and if so, throw exception to avoid unsafe relative operations
-	if(!pathIsInside(fullPath, userFolderPath)) {throw "Relative path";}
 	
 	// Promisify rimraf(fullPath)
 	return new Promise((resolve, reject) => {
@@ -142,24 +129,31 @@ async function rmdir(pathToDelete, userFolder) {
 }
 
 // Deletes a file
-async function rm(pathToDelete, userFolder) {
+async function rm(pathToDelete) {
 	const fullPath = path.normalize(pathToDelete);
-	const userFolderPath = path.normalize(config.userFilesFolder+"/"+userFolder);
 
-	// Check if the path contains .. and if so, throw exception to avoid unsafe relative operations
-	if(!pathIsInside(fullPath, userFolderPath)) {throw "Relative path";}
-	
-	// Promisify rimraf(fullPath)
 	return fs.unlink(fullPath);
+}
+
+// Moves a file or directory
+async function mv(from, to) {
+	// FROM: 		/path/to//file.bin
+	// TO:			/path/to/destination
+	
+	// fullFrom:	/path/to/file.bin
+	// fullTo:		/path/to/destination/file.bin
+	const fullFrom = path.normalize(from);
+	const fullTo = path.normalize(to+"/"+path.basename(from));
+	
+	// Check if the destination path already contains a file or directory and if so, throw error
+	if(await exists(fullTo)) {throw "File exists";}
+	
+	return fs.rename(fullFrom, fullTo);
 }
 
 // Sets a directory as public or makes it private
 async function setPublic(pathToSet, public, userFolder) {
 	const fullPath = path.normalize(path.join(pathToSet, ".public")); // path/to/set/.public
-	const userFolderPath = path.normalize(config.userFilesFolder+"/"+userFolder);
-
-	// Check if the path contains .. and if so, throw exception to avoid unsafe relative operations
-	if(!pathIsInside(fullPath, userFolderPath)) {throw "Relative path";}
 
 	try {
 		if(public) {
@@ -185,12 +179,9 @@ async function setPublic(pathToSet, public, userFolder) {
 
 async function writeFile(filePath, data, userFolder) {
 	const fullPath = path.normalize(filePath);
-	const userFolderPath = path.normalize(config.userFilesFolder+"/"+userFolder);
 	
-	// Check if the path contains .. and if so, throw exception to avoid unsafe relative operations
-	if(!pathIsInside(fullPath, userFolderPath)) {throw "Relative path";}
-	
-	// TODO: Check if file exists
+	// Check if the destination path already contains a file or directory and if so, throw error
+	if(await exists(fullPath)) {throw "File exists";}
 	
 	return fs.writeFile(fullPath, data);
 }
@@ -208,6 +199,7 @@ module.exports = {
 	mkdir: mkdir,
 	rmdir: rmdir,
 	rm: rm,
+	mv: mv,
 	setPublic: setPublic,
 	writeFile: writeFile
 }

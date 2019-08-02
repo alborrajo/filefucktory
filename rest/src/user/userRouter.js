@@ -34,7 +34,7 @@ router.get('/invites', dbAuth,
 	async (req, res, next) => {
 		try {
 			const invites = await db.getInvitesByEmail(req.user.username);
-			return res.json(invites);
+			return res.json({invites});
 		}
 		catch(err) {
 			return next(err); // If there's an error, pass it to the next error handler

@@ -10,7 +10,7 @@ const fsutils = require ('../files/fsutils.js');
 // Configure passport to process authentication with the database
 //	Checks if the provided email and password can be found in the DB
 const dbAuthPassport = require('passport');
-dbAuthPassport.use(new BasicStrategy(async (username, password, done) => {
+dbAuthPassport.use(new BasicStrategy(async function(username, password, done) {
 	try {
 		const user = await db.login(username, password); 
 		if (!user) { return done(null, false); }

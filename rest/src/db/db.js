@@ -48,8 +48,12 @@ function login(username, password) {
 			if(err) {return reject(err);}
 			
 			// If the password matches, resolve. Otherwise reject.
-			if(await bcrypt.compare(password, row.password)) {return resolve(row);}
-			else {return reject();}
+			try {
+				if(await bcrypt.compare(password, row.password)) {return resolve(row);}
+				else {return reject();}
+			} catch(err) {
+				return reject();
+			}
 		}
     )});
 }
