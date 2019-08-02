@@ -33,7 +33,7 @@ router.get('/', dbAuth,
 router.get('/invites', dbAuth,
 	async (req, res, next) => {
 		try {
-			const invites = await db.getInvitesByEmail(req.user.username);
+			const invites = await db.getInvitesByUser(req.user.username);
 			return res.json({invites});
 		}
 		catch(err) {

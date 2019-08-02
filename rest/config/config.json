@@ -6,6 +6,7 @@
 	
 	"database": "./db/filefucktory.db",
 	"userFilesFolder": "./files",
+	"maxFileSize": "1gb",
 	
 	"defaultMaxSpace": 1073742000,
 	"defaultMaxInvites": 10

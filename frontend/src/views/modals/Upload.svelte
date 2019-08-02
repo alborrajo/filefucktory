@@ -8,7 +8,6 @@
 
 	export let show = null;
 	$: {
-		console.log("Gabo");
 		jQuery('#uploadCollapse').collapse(show ? 'show' : 'hide');
 		show = null;
 	}
@@ -24,7 +23,6 @@
 	
 	let fileName = "Choose file";
 	const updateFileName = (event) => {
-		console.log(event.currentTarget);
 		fileName = event.currentTarget.files[0].name;
 	}
 </script>
@@ -42,7 +40,8 @@
 		<div class="container">
 
 			<div class="progress">
-				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {progress}%"/>
+				<div class="progress-bar progress-bar-striped" class:bg-success="{progress === 100}" class:progress-bar-animated="{progress < 100}"
+				role="progressbar" style="width: {progress}%"/>
 			</div>
 
 			<br/>

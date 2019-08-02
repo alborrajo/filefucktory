@@ -37,12 +37,19 @@
 	}).catch((err) => {
 		push("/login");
 	});
-		
+	
+	
+	
+	function invite(event) {
+		push("/invites");
+	}
+	
 	function logout(event) {
 		// Remove token from storage and go to the login page
 		sessionStorage.removeItem('token');
 		pop();
 	}
+	
 	
 	function handleActionButtons(event) {
 		switch(event.detail.action) {
@@ -138,7 +145,12 @@
 		const file = event.detail.file;
 		
 		try {
-			await api.upload(path, file, uploadProps);
+			uploadProps.progress = 0;
+			const onprogress = (event) => {
+				uploadProps.progress = Math.ceil((event.loaded/event.total)*100);
+			}
+			
+			await api.upload(path, file, onprogress);
 			folderPromise = api.getFolder(user.folder);
 			message = null;
 		}
@@ -156,9 +168,12 @@
 </style>
 
 <nav class="navbar navbar-dark bg-dark">
-    <img src="img/logowhite.png" height="30" class="d-inline-block align-top" alt="">
+    <a href="/"><img src="img/logowhite.png" height="30" class="d-inline-block align-top" alt=""/></a>
 	
-	<button on:click={logout} class="btn btn-sm btn-secondary">Logout <span class="fa fa-sign-out"></span></button>
+	<span class="button-group">
+		<button on:click={invite} class="btn btn-sm btn-info">Invite <span class="fa fa-address-book"></span></button>
+		<button on:click={logout} class="btn btn-sm btn-secondary">Logout <span class="fa fa-sign-out"></span></button>
+	</span>
 </nav>
 
 <main class="container">
@@ -171,7 +186,7 @@
 	
 	{#await userPromise then user}
 		{#await folderPromise then folder}
-			<Folder rootDir={true} path={user.folder} {folder} on:action={handleActionButtons} />
+			<Folder rootDir path={user.folder} {folder} on:action={handleActionButtons} />
 							
 			<!-- Action modals -->
 			<Mkdir  {...mkdirProps}  on:submit={handleMkdir}  />

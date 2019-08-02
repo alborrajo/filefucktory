@@ -56,7 +56,7 @@ router.get('/:userFolder/\*', express.json(), setLocalPath, publicFileAuth,
 );
 
 // Uploads the request's body as a file
-router.post('/:userFolder/\*', bodyParser.raw(), setLocalPath, privateFileAuth,
+router.post('/:userFolder/\*', bodyParser.raw({limit: config.maxFileSize}), setLocalPath, privateFileAuth,
 	async (req, res, next) => {
 		try {
 			return res.status(201).send(await fsutils.writeFile(req.localPath, req.body));
@@ -115,8 +115,7 @@ router.put('/:userFolder/\*', express.json(), setLocalPath, privateFileAuth,
 				// If there's name in the body of the request, CREATE NEW FOLDER
 				if(req.body.name) {
 					// Check if the path isn't inside the user folder, and if so, throw exception to avoid unsafe relative operations
-					const userFolderPath = path.normalize(config.userFilesFolder+"/"+userFolder);
-					if(!pathIsInside(req.body.name, userFolderPath)) {res.status(400).send();}
+					if(!pathIsInside(req.body.name, req.userFolder)) {return res.status(400).send();}
 					
 					// BAD REQUEST if the folder already exists
 					if(await fsutils.exists(path.join(req.localPath, req.body.name))) {

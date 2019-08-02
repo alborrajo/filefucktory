@@ -73,8 +73,8 @@ function getInvite(inviteID) {
 
 // Retrieves all Invites sent by a User.
 //	Also checks if the Invite has been used
-//	(Meaning, checks whether there's an user in the DB with the Invite's email)
-function getInvitesByEmail(email) {
+//	(Meaning, checks whether there's an user in the DB with the Invite's ID)
+function getInvitesByUser(user) {
 	return new Promise((resolve, reject) => {db.all(
 		// Select all data from invite and check if there's an user in the DB that has used that invite
 		`SELECT
@@ -84,7 +84,7 @@ function getInvitesByEmail(email) {
 			WHERE invitedBy = Invite.inviteID)==0 AS pending
 		FROM Invite
 		WHERE sentBy = ?`,
-		[email],
+		[user],
 		(err, rows) => {
 			if(err) {return reject(err);}
 			// Convert pending to boolean (1 -> true, 0 -> false)

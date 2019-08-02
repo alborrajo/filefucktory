@@ -19,6 +19,22 @@ class API {
 		});
 	}
 	
+	getInvites() {
+		return new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+			xhr.open("GET", "/rest/user/invites");
+			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					if(xhr.status === 200) {resolve(JSON.parse(xhr.responseText));}
+					else {reject(xhr.responseText);}
+				}
+			}
+			xhr.send();
+		});
+	}
+	
 	getFolder(folder) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
@@ -108,7 +124,7 @@ class API {
 		});
 	}
 	
-	upload(path, file, progressObject) {
+	upload(path, file, onprogress=undefined) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			xhr.open("POST", "rest/files/"+path);
@@ -116,11 +132,7 @@ class API {
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.setRequestHeader("Content-Type", "application/octet-stream");
 			
-			xhr.onprogress = function (e) {
-				if (e.lengthComputable) {
-					progressObject.progress = (e.loaded/e.total)*100
-				}
-			}
+			xhr.upload.onprogress = onprogress;
 			
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === XMLHttpRequest.DONE) {
