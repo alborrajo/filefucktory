@@ -1,11 +1,12 @@
 <script>
 import Router from 'svelte-spa-router';
+
 import InvitesList from './Invites/InvitesList.svelte';
-// Routes for the "inner router"
-// Note that the path is still the absolute one!
+import Invite from './Invites/Invite.svelte';
+
 const routes = {
     '/invites': InvitesList,
-	//'/invites/:inviteID': Invite,
+	'/invites/:inviteID': Invite,
 }
 </script>
 

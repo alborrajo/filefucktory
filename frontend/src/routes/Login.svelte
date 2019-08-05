@@ -2,6 +2,9 @@
 	import {push, pop, replace} from 'svelte-spa-router'
 	import API from '../util/api.js';
 	
+	import Alert from '../views/Alert.svelte';
+
+	
 	let userPromise;
 	let message;
 	
@@ -36,7 +39,7 @@
 		<div class="col-sm"></div>
 		
 		<div class="col-sm">
-			{#if message}<div class="alert alert-danger">{message}</div>{/if}
+			{#if message}<Alert title="Error fetching invites." {message} />{/if}
 
 			{#if userPromise}
 				{#await userPromise}

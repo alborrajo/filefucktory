@@ -1,8 +1,44 @@
 class API {
-	constructor(token) {
+	constructor(token=null) {
 		this.token = token;
+	}	
+	
+	getInvite(inviteID) {
+		return new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+			xhr.open("GET", "/rest/user/invites/"+inviteID);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					if(xhr.status === 200) {resolve(JSON.parse(xhr.responseText));}
+					else {reject(xhr.responseText);}
+				}
+			}
+			xhr.send();
+		});
 	}
 	
+	register(inviteID, username, password) {
+		return new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+			xhr.open("POST", "/rest/user/invites/"+inviteID);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					if(xhr.status === 201) {resolve(JSON.parse(xhr.responseText));}
+					else {reject(xhr.responseText);}
+				}
+			}
+			xhr.send(JSON.stringify({
+				"username": username,
+				"password": password
+			}));
+		});
+	}
+	
+	
+	// Functions that REQUIRE token	
 	getUser() {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
@@ -28,6 +64,22 @@ class API {
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === XMLHttpRequest.DONE) {
 					if(xhr.status === 200) {resolve(JSON.parse(xhr.responseText));}
+					else {reject(xhr.responseText);}
+				}
+			}
+			xhr.send();
+		});
+	}
+	
+	addInvite() {
+		return new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+			xhr.open("POST", "/rest/user/invites");
+			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					if(xhr.status === 201) {resolve();}
 					else {reject(xhr.responseText);}
 				}
 			}

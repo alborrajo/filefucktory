@@ -12,7 +12,8 @@
 	const routes = {
 		'/':					Main,
 		'/login':				Login,
-		'/invites*':			Invites,
+		'/invites':				Invites,
+		'/invites/*':			Invites,
 		
 		'*':					NotFound
 	}

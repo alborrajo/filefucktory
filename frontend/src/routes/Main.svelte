@@ -2,6 +2,8 @@
 	import {push, pop, replace} from 'svelte-spa-router'
 	import API from '../util/api.js';
 	
+	import Navbar from '../views/Navbar.svelte';
+	
 	import Folder from '../views/Folder.svelte';
 	
 	import Upload from '../views/modals/Upload.svelte';
@@ -37,18 +39,6 @@
 	}).catch((err) => {
 		push("/login");
 	});
-	
-	
-	
-	function invite(event) {
-		push("/invites");
-	}
-	
-	function logout(event) {
-		// Remove token from storage and go to the login page
-		sessionStorage.removeItem('token');
-		pop();
-	}
 	
 	
 	function handleActionButtons(event) {
@@ -142,21 +132,36 @@
 	
 	async function handleUpload(event) {
 		const path = event.detail.path;
-		const file = event.detail.file;
+		const files = event.detail.files;
 		
-		try {
-			uploadProps.progress = 0;
+		uploadProps.progress = [];
+		for(let i=0; i < files.length; i++) {
+			// Before upload
+			uploadProps.progress[i] = {
+				name: files[i].name,
+				progress: 0,
+				status: "primary"
+			};
+			
+			// During upload
 			const onprogress = (event) => {
-				uploadProps.progress = Math.ceil((event.loaded/event.total)*100);
+				uploadProps.progress[i].progress = Math.ceil((event.loaded/event.total)*100);
 			}
 			
-			await api.upload(path, file, onprogress);
+			try {
+				// After upload (success)
+				await api.upload(path+"/"+files[i].name, files[i], onprogress);
+				uploadProps.progress[i].status = "success";
+			}
+			catch(err) {
+				// After upload (error)
+				uploadProps.progress[i].status = "danger";
+			}
+			
 			folderPromise = api.getFolder(user.folder);
-			message = null;
 		}
-		catch(err) {
-			message = err ? err: "Error";
-		}
+		
+		message = null;		
 	}
 	
 </script>
@@ -167,22 +172,15 @@
 	}
 </style>
 
-<nav class="navbar navbar-dark bg-dark">
-    <a href="/"><img src="img/logowhite.png" height="30" class="d-inline-block align-top" alt=""/></a>
-	
-	<span class="button-group">
-		<button on:click={invite} class="btn btn-sm btn-info">Invite <span class="fa fa-address-book"></span></button>
-		<button on:click={logout} class="btn btn-sm btn-secondary">Logout <span class="fa fa-sign-out"></span></button>
-	</span>
-</nav>
+<Navbar/>
 
 <main class="container">
 
 	<h2>Files</h2>
 	
-	<Upload {...uploadProps} on:submit={handleUpload} /><br/>
+	{#if message}<Alert title="Error." {message} />{/if}
 	
-	{#if message}<div class="alert alert-danger">{message}</div>{/if}
+	<Upload {...uploadProps} on:submit={handleUpload} /><br/>
 	
 	{#await userPromise then user}
 		{#await folderPromise then folder}

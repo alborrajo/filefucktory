@@ -7,9 +7,21 @@
 	
 	export let path;
 	export let folder;
-	
-	
+		
 	const dispatch = createEventDispatcher();
+
+	
+	function formatBytes(bytes, decimals = 2) {
+		if (bytes === 0) return '0 B';
+
+		const k = 1024;
+		const dm = decimals < 0 ? 0 : decimals;
+		const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+	}
 </script>
 
 <div class="panel panel-default">
@@ -19,7 +31,7 @@
 			<span class="fa fa-folder-open"></span>
 		</button>
 		<!-- Folder name -->
-		<strong>{#if folder.public}<span class="fa fa-unlock"></span>{/if} {folder.name}</strong> ({folder.size} B)
+		<strong>{#if folder.public}<span class="fa fa-unlock"></span>{/if} {folder.name}</strong> ({formatBytes(folder.size)})
 		
 		<!-- Buttons on the right -->
 		<div class="btn-group pull-right">
