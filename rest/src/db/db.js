@@ -27,11 +27,12 @@ function errorHandler(err, req, res, next) {
 	const error2status = {
 		"SQLITE_TOOBIG": 400,
 		"SQLITE_CONSTRAINT": 400,
+		"Used up all invites": 400,
 	}
 	
 	if(err.code in error2status) {
 		return res.status(error2status[err.code])
-				  .send(err.toString()); // TODO: Dont reveal DB info to the clients
+				  .send(err.code); // TODO: Dont reveal DB info to the clients
 	}
 
 	next(err);
@@ -62,9 +63,16 @@ function login(username, password) {
 // Retrieves an invite by its ID
 function getInvite(inviteID) {
 	return new Promise((resolve, reject) => {db.get(
-		"SELECT * FROM Invite WHERE inviteID = ?",
+		`SELECT
+			*,
+			(SELECT COUNT(*)
+			FROM User
+			WHERE invitedBy = Invite.inviteID)==0 AS pending
+		FROM Invite
+		WHERE inviteID = ?`,
 		[inviteID],
 		(err, row) => {
+			row.pending = Boolean(row.pending);
 			if(err) {return reject(err);}
 			return resolve(row);
 		}
@@ -74,7 +82,7 @@ function getInvite(inviteID) {
 // Retrieves all Invites sent by a User.
 //	Also checks if the Invite has been used
 //	(Meaning, checks whether there's an user in the DB with the Invite's ID)
-function getInvitesByUser(user) {
+function getInvitesByUsername(username) {
 	return new Promise((resolve, reject) => {db.all(
 		// Select all data from invite and check if there's an user in the DB that has used that invite
 		`SELECT
@@ -84,7 +92,7 @@ function getInvitesByUser(user) {
 			WHERE invitedBy = Invite.inviteID)==0 AS pending
 		FROM Invite
 		WHERE sentBy = ?`,
-		[user],
+		[username],
 		(err, rows) => {
 			if(err) {return reject(err);}
 			// Convert pending to boolean (1 -> true, 0 -> false)
@@ -95,10 +103,16 @@ function getInvitesByUser(user) {
 }
 
 // Inserts into the DB a new Invite
-function newInvite(sentBy) {
+async function newInvite(user) {
+	// Check if the user has already used all their invites
+	if((await getInvitesByUsername(user.username)).length >= user.maxInvites) {throw {code: "Used up all invites"};}
+	
+	// Generate random invite ID
+	const inviteID = crypto.randomBytes(4).readUIntBE(0, 4);
+	
 	return new Promise((resolve, reject) => {db.run(
-		"INSERT INTO Invite(sentBy) VALUES(?);",
-		[sentBy],
+		"INSERT INTO Invite(inviteID, sentBy) VALUES(?, ?);",
+		[inviteID, user.username],
 		// We use function here in order to preserve "this" and retrieve this.lastID
 		// It won't work with an arrow function, blame Javascript
 		function(err) {
@@ -117,85 +131,58 @@ async function useInvite(inviteID, username, password, callback) {
 	return new Promise((resolve,reject) => {
 		db.serialize(async function() {
 			db.run('BEGIN TRANSACTION;');
-		
-			// Retrieve Invite
-			let invite = null;
-			try {
-				invite = await new Promise((resolve, reject) => {
-					db.get(
-						"SELECT * FROM Invite WHERE inviteID = ?;",
-						[inviteID],
-						(err, row) => {
-							if(err) {
-								db.run('ROLLBACK;');	// Stop transaction
-								return reject(err);		// Reject. This will send the error to the catch block
-							} 
-							return resolve(row); 		// Return the row. This will end up in the invite variable
-						}
-					);
-				});
-			} catch(err) {
-				return reject(err); // Throw exception
-			}
 			
-			// If there's no invite, stop
-			if(!invite) {
-				db.run('ROLLBACK;'); 		// Stop transaction
-				return resolve(invite); 	// Return null/undefined invite
-			}
-			
-			
-			// Generate user folder string
-			const folder = crypto.randomBytes(16).toString("hex");	
-			
-			// Hash password
-			const hashedPassword = await bcrpyt.hash(password, 10);
+			try{
+				// Retrieve Invite
+				let invite = await getInvite(inviteID);
+				
+				// If there's no invite or it has been used, stop
+				if(!invite || !invite.pending) {
+					db.run('ROLLBACK;'); 		// Stop transaction
+					return resolve(null); 	// Return null
+				}
+				
+				
+				// Generate user folder string
+				const folder = crypto.randomBytes(16).toString("hex");	
+				
+				// Hash password
+				const hashedPassword = await bcrypt.hash(password, 10);
 
-			
-			// Insert User
-			try {
+				
+				// Insert User
 				await new Promise((resolve, reject) => {
 					db.run(
 						"INSERT INTO User(username, password, folder, invitedBy) VALUES(?, ?, ?, ?);",
 						[username, hashedPassword, folder, inviteID],
 						(err) => {
 							if(err) {
-								db.run('ROLLBACK;'); 		// Stop transaction
 								return reject(err); 		// Reject. This will send err to the catch block
 							}
 							return resolve(this.lastID); 	// Resolve if no errors happened
 						}
 					);
 				});
-			} catch(err) {
-				return reject(err); // Throw exception
-			}
-			
-			
-			// Retrieve newly created User
-			let newUser = null;
-			try {
-				newUser = await new Promise((resolve, reject) => {
-					db.get(
+				
+				// Retrieve newly created User
+				let newUser = await new Promise((resolve, reject) => {db.get(
 					"SELECT * FROM User WHERE username = ?;",
 					[username],
-					(err, row) => {
-						if(err) {
-							db.run('ROLLBACK;');	// Stop transaction
-							return reject(err);		// Reject. This will send err to the catch block
-						}
-						return resolve(row);		// Resolve with the row if no errors happened
-					});
-				});
+					async (err, row) => {
+						// Throw exception if there's an error
+						if(err) {return reject(err);}
+						return resolve(row);						
+					}
+				)});
+				db.run('COMMIT;');
+				
+				// Return data
+				return resolve(newUser);
+				
 			} catch(err) {
+				db.run('ROLLBACK;');// Stop transaction
 				return reject(err); // Throw exception
 			}
-			
-			db.run('COMMIT;');
-			
-			// Return data
-			return resolve(newUser);
-			
 		});	
 	});
 }
@@ -221,7 +208,7 @@ module.exports = {
 	login: login,
 	
 	getInvite: getInvite,
-	getInvitesByEmail: getInvitesByEmail,
+	getInvitesByUsername: getInvitesByUsername,
 	newInvite: newInvite,
 	useInvite: useInvite,
 	

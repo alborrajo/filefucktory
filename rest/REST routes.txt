@@ -23,13 +23,17 @@
 |        |                      |                           |                               | 401: {}                                      |                     Unauthorized |
 +--------+----------------------+---------------------------+-------------------------------+----------------------------------------------+----------------------------------+
 | POST   | /user/invites        | 						    | User auth                     | 201: {                                       |              Sends a new invite  |
-|        |                      |                           |                               |   "inviteID": invite ID                      |                                  |
+|        |                      |                           |                               |   "inviteID": invite ID,                     |                                  |
+|        |                      |                           |                               |   "sentBy": user who sent the invite,        |                                  |
+|        |                      |                           |                               |   "pending": used or not                     |                                  |
 |        |                      |                           |                               | }                                            |                                  |
 |        |                      |                           |                               |                                              |                       	  		  |
 |        |                      |                           |                               | 401: {}                                      |                     Unauthorized |
 +--------+----------------------+---------------------------+-------------------------------+----------------------------------------------+----------------------------------+
 | GET    | /user/invites/       |                           |                               | 200: {                                       |       Returns invite data by ID  |
 |        |    :inviteID         |                           |                               |   "inviteID": invite ID,                     |                                  |
+|        |                      |                           |                               |   "sentBy": user who sent the invite,        |                                  |
+|        |                      |                           |                               |   "pending": used or not                     |                                  |
 |        |                      |                           |                               |},                                            |                                  |
 |        |                      |                           |                               |                                              |                                  |
 |        |                      |                           |                               | 404: {}                                      |                        Not found |

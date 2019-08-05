@@ -5,6 +5,8 @@
 const express = require('express');
 const router = new express.Router();
 
+const path = require('path');
+
 const dbAuth = require('../db/auth.js').dbAuth;
 const db = require('../db/db.js');
 
@@ -33,7 +35,7 @@ router.get('/', dbAuth,
 router.get('/invites', dbAuth,
 	async (req, res, next) => {
 		try {
-			const invites = await db.getInvitesByUser(req.user.username);
+			const invites = await db.getInvitesByUsername(req.user.username);
 			return res.json({invites});
 		}
 		catch(err) {
@@ -48,8 +50,9 @@ router.get('/invites', dbAuth,
 router.post('/invites', dbAuth,	
 	async (req, res, next) => {		
 		try {
-			const inviteID = await db.newInvite(req.user.username);
-			return res.status(201).json({inviteID: inviteID});
+			const inviteID = await db.newInvite(req.user);
+			const newInvite = await db.getInvite(inviteID);
+			return res.status(201).json(newInvite);
 		}
 		catch(err) {
 			return next(err); // If there's an error, pass it to the next error handler
@@ -68,8 +71,6 @@ router.get('/invites/:inviteID',
 			// If there's no row, the invite doesn't exist in the DB. Not Found.
 			if(!invite) {return res.status(404).send();}
 				
-			// Dont show publically who invited who
-			delete invite.sentBy;
 			return res.json(invite);
 		}
 		catch(err) {
@@ -90,7 +91,7 @@ router.post('/invites/:inviteID',
 			if(!newUser) {return res.status(404).send();}
 			
 			// Create the user's folder
-			await fsutils.mkdir(path.normalize(config.userFilesFolder, newUser.folder));
+			await fsutils.mkdir(path.join(config.userFilesFolder, newUser.folder));
 
 			// Send User row as response **without the password field**
 			const user = newUser;

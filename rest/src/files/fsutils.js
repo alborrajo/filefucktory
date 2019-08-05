@@ -99,21 +99,26 @@ async function readPath(pathToRead) {
 		
 		const pathToReadContents = await fs.readdir(pathToRead);
 		for(pathToReadChild of pathToReadContents) {
-			// Don't include .public
+			// Don't include .public file
 			if(pathToReadChild !== ".public") {
 				toReturn.contents.push(
 					await readPath(path.normalize(pathToRead+"/"+pathToReadChild))
 				);
 			}
 		}
+		
+		// Calculate correct directory size
+		toReturn.size = toReturn.contents.reduce((total, currentVal) => {
+			return total+currentVal.size;
+		}, 0);
 	}
 	
 	return toReturn;
 }
 
 // Creates a new directory on the path specified, with the name specified
-async function mkdir(pathToNewDir, newDirName) {
-	const fullPath = path.normalize(pathToNewDir+"/"+newDirName);
+async function mkdir(pathToNewDir) {
+	const fullPath = path.join(pathToNewDir);
 	
 	return fs.mkdir(fullPath);
 }
