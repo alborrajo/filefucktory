@@ -2,39 +2,41 @@
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-	export let setPublic = false;
 	export let path = "";
 
 	export let show = null;
 	$: {
-		jQuery('#publicModal').modal(show ? 'show' : 'hide');
+		//jQuery('#mkdirModal').modal(show ? 'show' : 'hide');
 		show = null;
 	}
 
 	function handleSubmit(event) {
 		dispatch('submit', {
 			"path": event.currentTarget.path.value,
-			"public": setPublic
+			"dirName": event.currentTarget.dirName.value,
+			"public": event.currentTarget.public.checked
 		});
 	}
 
 </script>
 
 <!-- mkdir -->
-<div class="modal fade" id="publicModal" tabindex="-1" >
+<div class="modal fade" id="mkdirModal" tabindex="-1" >
 	<div class="modal-dialog">
 		<form class="modal-content" on:submit|preventDefault="{handleSubmit}">
 			<div class="modal-header">
-				<h5>Set as {setPublic ? "public" : "private"}?</h5>
+				<h5>Make directory</h5>
 			</div>
 			<div class="modal-body input-group">
 				<input type="hidden" name="path" value="{path}"/>
-				<input type="hidden" name="public" value="{setPublic}"/>
-				<p>Are you sure you want to set {path.split('\\').pop().split('/').pop()} as <strong>{setPublic ? "public" : "private"}</strong>?</p>
+				<input type="text" name="dirName" class="form-control" required placeholder="Directory name"/>
+				<div class="input-group-append input-group-text">
+					<input type="checkbox" name="public"/> Public
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-warning">Set</button>
+				<button type="submit" class="btn btn-primary">Make</button>
 			</div>
 		</form>
 	</div>

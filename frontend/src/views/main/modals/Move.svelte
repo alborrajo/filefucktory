@@ -12,7 +12,7 @@
 
 	export let show = null;
 	$: {
-		jQuery('#moveModal').modal(show ? 'show' : 'hide');
+		//jQuery('#moveModal').modal(show ? 'show' : 'hide');
 		show = null;
 	}
 	

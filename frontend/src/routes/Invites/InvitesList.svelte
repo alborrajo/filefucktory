@@ -1,6 +1,6 @@
 <script>
+	import Layout from '../../views/main/Layout.svelte';
 	import Alert from '../../views/Alert.svelte';
-	import Navbar from '../../views/Navbar.svelte';
 	
 	import {push, pop, replace} from 'svelte-spa-router'
 	export let params = {}
@@ -24,42 +24,55 @@
 			return api.getInvites();
 		})();
 	}
+	
+	function invite(event) {
+		push("/invites");
+	}
+	
+	function logout(event) {
+		// Remove token from storage and go to the login page
+		sessionStorage.removeItem('token');
+		location.reload(); // TODO: Make this less hacky
+	}
 </script>
 
+<style>
+	.content {
+		padding: 20px
+	}
+</style>
 
 
-<Navbar/>
-
-<div class="container">
-
-	{#await invitesPromise}
-		<h1>Invites</h1>
-		<div class="spinner-border" role="status">
-		  <span class="sr-only">Loading...</span>
-		</div>
-	{:then invitesObj}
-		<h1>
-			Invites
-			
-			{#await userPromise then user}
-				<span class="badge badge-{invitesObj.invites.length < user.maxInvites ? 'info' : 'warning'}">{invitesObj.invites.length} / {user.maxInvites}</span>
-				{#if invitesObj.invites.length < user.maxInvites }
-					<button type="button" class="badge badge-primary" on:click="{handleNewInvite}" alt="New invite"><i class="fa fa-plus"></i></button>
-				{/if}
+<Layout>
+	<main slot="content" class="content">
+		{#await userPromise then user}
+			{#await invitesPromise}
+				<h1>Invites</h1>
+				<div class="mdl-spinner mdl-js-spinner is-active"></div>
+			{:then invitesObj}
+				<h1>
+					Invites
+					
+					<!-- Disabled FAB button -->
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" disabled="{invitesObj.invites.length >= user.maxInvites}" on:click="{handleNewInvite}">
+						{invitesObj.invites.length} / {user.maxInvites} <i class="material-icons">add</i>
+					</button>
+				</h1>
+				
+				
+				<ul class="mdl-list">
+					{#each invitesObj.invites as invite, index}
+						<li class="mdl-list__item">
+							<span class="mdl-list__item-primary-content">
+								{#if !invite.pending}<i class="material-icons mdl-list__item-icon">check_box</i>{/if}
+								<a href="#/invites/{invite.inviteID}">Invite #{index+1}</a>
+							</span>
+						</li>
+					{/each}
+				</ul>
+			{:catch error}
+				<Alert title="Error fetching invites." message={error} />
 			{/await}
-		</h1>
-		
-		
-		<ul class="list-group">
-			{#each invitesObj.invites as invite, index}
-				<li class="list-group-item">
-					<a href="#/invites/{invite.inviteID}">Invite #{index+1}</a>
-					{#if invite.pending}<span class="pull-right badge badge-info">Pending <span class="fa fa-spinner fa-pulse"></span></span>{/if}
-				</li>
-			{/each}
-		</ul>
-	{:catch error}
-		<Alert title="Error fetching invites." message={error} />
-	{/await}
-	
-</div>
+		{/await}
+	</main>
+</Layout>

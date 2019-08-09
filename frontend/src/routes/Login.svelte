@@ -25,37 +25,45 @@
 	}
 </script>
 
+<style>
+	.center {
+		margin: auto;
+		width: 50%;
+		padding: 10px;
+	}
+</style>
 
 <!-- Fork me on GitHub -->
 <a href="https://github.com/you"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
 
-<div class="container text-center">
+<div class="center mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+	<img src="img/logo.png" alt="FileFucktory" width="300">
+  </div>
+  <form class="col-sm form-group" on:submit|preventDefault="{(event) => {login(event.currentTarget.username.value, event.currentTarget.password.value)}}">
+	<div class="mdl-card__supporting-text">
+	<h2 class="mdl-card__title-text">Login</h2>
+    {#if message}<Alert title="Error while logging in." {message} />{/if}
 
-	<img class="mb-4" src="img/logo.png" alt="FileFucktory" width="300">
-
-	<h1>Login</h1>
-	
-	<div class="row">
-		<div class="col-sm"></div>
+	{#if userPromise}
+		{#await userPromise}
+			<div class="mdl-spinner mdl-js-spinner is-active"></div>
+		{/await}
+	{/if}
 		
-		<div class="col-sm">
-			{#if message}<Alert title="Error fetching invites." {message} />{/if}
-
-			{#if userPromise}
-				{#await userPromise}
-					<div class="spinner-border" role="status"/>
-				{/await}
-			{/if}
-			
-			<form class="col-sm form-group" on:submit|preventDefault="{(event) => {login(event.currentTarget.username.value, event.currentTarget.password.value)}}">
-				<input class="form-control" name="username" type="text" placeholder="username"/>
-				<input class="form-control" name="password" type="password" placeholder="password"/>
-				<input class="btn btn-primary" type="submit"/>
-			</form>
-
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="text" name="username" placeholder="Username"/>
+			<label class="mdl-textfield__label" for="sample3">Username</label>
 		</div>
 		
-		<div class="col-sm"></div>
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="password" name="password" placeholder="Password"/>
+			<label class="mdl-textfield__label" for="sample3">Password</label>
+		</div>
+		
 	</div>
-	
+	<div class="mdl-card__actions mdl-card--border">
+		<input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit"/>
+	</div>
+  </form>
 </div>

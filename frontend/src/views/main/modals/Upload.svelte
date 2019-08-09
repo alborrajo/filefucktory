@@ -8,7 +8,7 @@
 
 	export let show = null;
 	$: {
-		jQuery('#uploadCollapse').collapse(show ? 'show' : 'hide');
+		//jQuery('#uploadCollapse').collapse(show ? 'show' : 'hide');
 		show = null;
 	}
 

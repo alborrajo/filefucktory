@@ -19,53 +19,61 @@
 	}
 </script>
 
+<style>
+	.center {
+		margin: auto;
+		width: 50%;
+		padding: 10px;
+	}
+</style>
 
 <!-- Fork me on GitHub -->
 <a href="https://github.com/you"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
 
-<div class="container text-center">
+<div class="center mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+	<img src="img/logo.png" alt="FileFucktory" width="300">
+  </div>
+  <form class="col-sm form-group" on:submit|preventDefault="{handleRegister}">
+	<div class="mdl-card__supporting-text">
+	<h2 class="mdl-card__title-text">Register</h2>
 
-	<img class="mb-4" src="img/logo.png" alt="FileFucktory" width="300">
-
-	<h1>Register</h1>
-	
-	<div class="row">
-		<div class="col-sm"></div>
-		
-		<div class="col-sm">
-			
-			{#if userPromise}
-				{#await userPromise}
-					<div class="spinner-border" role="status"/>
-				{:then user}
-					<Alert title="Registered successfully" alertClass="success">
-						<a href="/">Click here</a> to continue.
-					</Alert>
-				{:catch err}
-					<Alert title="Error while registering" alertClass="warning">{err}</Alert>
-				{/await}
-			{/if}
-
-			{#await invitePromise}
-				<div class="spinner-border" role="status"/>
-			{:then invite}
-				{#if invite.pending}
-					<form class="col-sm form-group" on:submit|preventDefault="{handleRegister}">
-						<input class="form-control" name="username" type="text" placeholder="username"/>
-						<input class="form-control" name="password" type="password" placeholder="password"/>
-						<input class="btn btn-primary" type="submit"/>
-					</form>
-				{:else}
-					<Alert title="Invite already used" alertClass="warning"/>
-				{/if}
+		{#if userPromise}
+			{#await userPromise}
+				<div class="mdl-spinner mdl-js-spinner is-active"></div>
+			{:then user}
+				<Alert title="Registered successfully" alertClass="success">
+					<a href="/">Click here</a> to continue.
+				</Alert>
 			{:catch err}
-				<Alert title="Error fetching the Invite" alertClass="warning">The invite doesn't exist</Alert>
+				<Alert title="Error while registering" alertClass="warning">{err}</Alert>
 			{/await}
-
-
-		</div>
+		{/if}
 		
-		<div class="col-sm"></div>
+		
+		{#await invitePromise}
+			<div class="spinner-border" role="status"/>
+		{:then invite}
+			{#if invite.pending}
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<input class="mdl-textfield__input" type="text" name="username" placeholder="Username"/>
+					<label class="mdl-textfield__label" for="sample3">Username</label>
+				</div>
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<input class="mdl-textfield__input" type="password" name="password" placeholder="Password"/>
+					<label class="mdl-textfield__label" for="sample3">Password</label>
+				</div>
+			{:else}
+				<Alert title="Invite already used" alertClass="warning"/>
+			{/if}
+		{:catch err}
+			<Alert title="Error fetching the Invite" alertClass="warning">The invite doesn't exist</Alert>
+		{/await}
+		
 	</div>
-	
+	<div class="mdl-card__actions mdl-card--border">
+		<input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit"/>
+	</div>
+  </form>
+  
 </div>

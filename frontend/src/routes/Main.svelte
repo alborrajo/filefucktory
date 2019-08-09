@@ -1,46 +1,66 @@
 <script>
 	import {push, pop, replace} from 'svelte-spa-router'
-	import API from '../util/api.js';
+	export let params = {}
 	
-	import Navbar from '../views/Navbar.svelte';
-	
-	import Folder from '../views/Folder.svelte';
-	
-	import Upload from '../views/modals/Upload.svelte';
-	const uploadProps = {};
-	
-	import Mkdir from '../views/modals/Mkdir.svelte';
-	const mkdirProps = {};
-	
-	import Delete from '../views/modals/Delete.svelte';
-	const deleteProps = {};
-	
-	import Public from '../views/modals/Public.svelte';
-	const publicProps = {};
-	
-	import Move from '../views/modals/Move.svelte';
-	const moveProps = {};
-	
-	
-	let message;
-
 	// Create API object using the sessionStorage 'token' as the auth token
+	import API from '../util/api.js';
 	const token = sessionStorage.getItem('token');	
 	const api = new API(token);
 	
+	import Alert from '../views/Alert.svelte';
+
+	import Layout from '../views/main/Layout.svelte';
+	
+	import FolderDrawer from '../views/main/Folder/FolderDrawer.svelte';
+	import FolderContent from '../views/main/Folder/FolderContent.svelte';	
+	
+	/*	
+	import Upload from '../views/main/modals/Upload.svelte';
+	const uploadProps = {};
+	
+	import Mkdir from '../views/main/modals/Mkdir.svelte';
+	const mkdirProps = {};
+	*/
+	import Delete from '../views/main/modals/Delete.svelte';
+	const deleteProps = {};
+	
+	import Public from '../views/main/modals/Public.svelte';
+	const publicProps = {};
+	/*
+	import Move from '../views/main/modals/Move.svelte';
+	const moveProps = {};
+	*/
+	
 	let user;
+	let folder;
 	
 	let userPromise = api.getUser();
-	let folderPromise;
+			
+	let message;
+
 	
+	$: {
+		if(params.wild != null) {
+			updateFolder(params.wild);
+		}
+		else{
+			userPromise.then((userData) => {
+				push("/"+userData.folder);
+			});
+		}
+	}
+		
 	userPromise.then((userData) => {
-		user = userData
-		folderPromise = api.getFolder(userData.folder)
+		user = userData;
 	}).catch((err) => {
 		push("/login");
-	});
+	});	
 	
+	async function updateFolder(path) {
+		folder = await api.getFolder(path);
+	}
 	
+		
 	function handleActionButtons(event) {
 		switch(event.detail.action) {
 			case "mkdir":
@@ -71,14 +91,15 @@
 	}
 	
 	async function handleMkdir(event) {
-		mkdirProps.show = false;
 		const path = event.detail.path;
 		const dirName = event.detail.dirName;
 		const setPublic = event.detail.public;
 	
 		try {
 			await api.mkdir(path, dirName, setPublic);
-			folderPromise = api.getFolder(user.folder);
+			updateFolder(params.wild);
+			
+			mkdirProps.show = false;
 			message = null;
 		}
 		catch(err) {
@@ -87,12 +108,13 @@
 	}
 	
 	async function handleDelete(event) {
-		deleteProps.show = false;
-		const path = event.detail.path;
-	
+		const path = event.detail.path;	
+		
 		try {
 			await api.rm(path);
-			folderPromise = api.getFolder(user.folder);
+			updateFolder(params.wild);
+			
+			deleteProps.show = false;
 			message = null;
 		}
 		catch(err) {
@@ -101,13 +123,14 @@
 	}
 	
 	async function handlePublic(event) {
-		publicProps.show = false;
 		const path = event.detail.path;
 		const setPublic = event.detail.public;
 		
 		try {
 			await api.setPublic(path, setPublic);
-			folderPromise = api.getFolder(user.folder);
+			updateFolder(params.wild);
+			
+			publicProps.show = false;
 			message = null;
 		} 
 		catch(err) {
@@ -116,13 +139,13 @@
 	}
 	
 	async function handleMove(event) {
-		moveProps.show = false;
 		const from = event.detail.from;
 		const to = event.detail.to;
 		
 		try {
 			await api.move(from, to);
-			folderPromise = api.getFolder(user.folder);
+			updateFolder(params.wild);
+			mkdirProps.show = false;
 			message = null;
 		}
 		catch(err) {
@@ -158,7 +181,7 @@
 				uploadProps.progress[i].status = "danger";
 			}
 			
-			folderPromise = api.getFolder(user.folder);
+			updateFolder(params.wild);
 		}
 		
 		message = null;		
@@ -167,32 +190,27 @@
 </script>
 
 <style>
-	.container {
-		margin-top: 20px;
+	.page-content {
+		padding: 20px;
 	}
 </style>
 
-<Navbar/>
-
-<main class="container">
-
-	<h2>Files</h2>
-	
-	{#if message}<Alert title="Error." {message} />{/if}
-	
-	<Upload {...uploadProps} on:submit={handleUpload} /><br/>
-	
-	{#await userPromise then user}
-		{#await folderPromise then folder}
-			<Folder rootDir path={user.folder} {folder} on:action={handleActionButtons} />
-							
-			<!-- Action modals -->
-			<Mkdir  {...mkdirProps}  on:submit={handleMkdir}  />
-			<Delete {...deleteProps} on:submit={handleDelete} />
-			<Public {...publicProps} on:submit={handlePublic} />
-			<Move   {...moveProps}   on:submit={handleMove} path={user.folder} {folder} />
-		{/await}
-	{/await}
-	
-	
-</main>
+{#if user}
+	{#if folder}
+		{#if params.wild} <!-- Avoid sending a null params.wild -->
+			<Layout>
+				<div slot="drawer"><FolderDrawer rootDir={params.wild == user.folder} {folder} path={params.wild} /></div>
+				
+				<div slot="content">
+					<FolderContent rootDir={params.wild == user.folder} {folder} path={params.wild} {user} on:action="{handleActionButtons}">
+						{#if message}<Alert title="Error" {message} />{/if}
+						
+						<!-- Action dialogs -->
+						<Public {...publicProps} on:submit="{handlePublic}" />
+						<Delete {...deleteProps} on:submit="{handleDelete}" />
+					</FolderContent>
+				</div>
+			</Layout>
+		{/if}
+	{/if}
+{/if}		
