@@ -14,22 +14,22 @@
 	import FolderDrawer from '../views/main/Folder/FolderDrawer.svelte';
 	import FolderContent from '../views/main/Folder/FolderContent.svelte';	
 	
-	/*	
+
 	import Upload from '../views/main/modals/Upload.svelte';
 	const uploadProps = {};
 	
 	import Mkdir from '../views/main/modals/Mkdir.svelte';
 	const mkdirProps = {};
-	*/
+
 	import Delete from '../views/main/modals/Delete.svelte';
 	const deleteProps = {};
 	
 	import Public from '../views/main/modals/Public.svelte';
 	const publicProps = {};
-	/*
+	
 	import Move from '../views/main/modals/Move.svelte';
 	const moveProps = {};
-	*/
+	
 	
 	let user;
 	let folder;
@@ -94,7 +94,7 @@
 		const path = event.detail.path;
 		const dirName = event.detail.dirName;
 		const setPublic = event.detail.public;
-	
+			
 		try {
 			await api.mkdir(path, dirName, setPublic);
 			updateFolder(params.wild);
@@ -145,7 +145,7 @@
 		try {
 			await api.move(from, to);
 			updateFolder(params.wild);
-			mkdirProps.show = false;
+			moveProps.show = false;
 			message = null;
 		}
 		catch(err) {
@@ -171,17 +171,10 @@
 				uploadProps.progress[i].progress = Math.ceil((event.loaded/event.total)*100);
 			}
 			
-			try {
-				// After upload (success)
-				await api.upload(path+"/"+files[i].name, files[i], onprogress);
-				uploadProps.progress[i].status = "success";
-			}
-			catch(err) {
-				// After upload (error)
-				uploadProps.progress[i].status = "danger";
-			}
-			
-			updateFolder(params.wild);
+			api.upload(path+"/"+files[i].name, files[i], onprogress)
+				.then(() => uploadProps.progress[i].status = "success") // After upload (success)
+				.catch(() => uploadProps.progress[i].status = "danger") // After upload (error)
+				.finally(() => updateFolder(params.wild))
 		}
 		
 		message = null;		
@@ -206,8 +199,12 @@
 						{#if message}<Alert title="Error" {message} />{/if}
 						
 						<!-- Action dialogs -->
+						<Mkdir {...mkdirProps} on:submit="{handleMkdir}" />
 						<Public {...publicProps} on:submit="{handlePublic}" />
 						<Delete {...deleteProps} on:submit="{handleDelete}" />
+						<Move {...moveProps} to={params.wild} on:submit="{handleMove}" />
+						<Upload {...uploadProps} on:submit="{handleUpload}" />
+						
 					</FolderContent>
 				</div>
 			</Layout>

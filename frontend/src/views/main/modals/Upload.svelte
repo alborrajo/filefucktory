@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 	
@@ -7,10 +8,11 @@
 	export let path = "";
 
 	export let show = null;
-	$: {
-		//jQuery('#uploadCollapse').collapse(show ? 'show' : 'hide');
-		show = null;
-	}
+	
+	onMount(() => {
+		// Have Material Design Lite register the buttons so it can show the ripple effect
+		componentHandler.upgradeElements(document.getElementById("move"))
+	});
 
 	const handleSubmit = (event) => {
 		if(event.currentTarget.files.files !== undefined) {
@@ -21,50 +23,88 @@
 		}
 	}
 	
-	let fileNames;
 	const updateFileNames = (event) => {
-		fileNames = event.currentTarget.files[0].name;
-		for(let i=1; i < event.currentTarget.files.length; i++) {
-			fileNames += ", "+event.currentTarget.files[i].name;
+		progress = [];
+		for(let i=0; i < event.currentTarget.files.length; i++) {
+			progress.push({
+				name: event.currentTarget.files[i].name,
+				progress: 0,
+				status: "primary"
+			});
 		}
 	}
 </script>
 
-<div class="collapse" id="uploadCollapse">
-	<div class="card card-body">
+<style>
+	.mdl-card-wide {
+		width: 100%;
+	}
+	
+	#file {
+		display: none;
+	}
+	
+	.progress {
+		background-color: rgb(207, 208, 214);
+		position: relative;
+		height: 0.5em;
+	}
 
-		<button type="button" class="close" data-toggle="collapse" data-target="#uploadCollapse">
-			<span>&times;</span>
-		</button>
+	.progress-status {
+		background-color: rgb(63,81,181);
+		height: 100%;
+		display: block;
+		position: relative;
+		overflow: hidden;
+	}
+</style>
 
-		<h5 class="card-title">Upload</h5>
-		<h6 class="card-subtitle mb-2 text-muted">To: {path}</h6>		
+<!-- upload -->
+<form class="mdl-card mdl-card-wide mdl-shadow--2dp" class:hidden="{!show}" on:submit|preventDefault="{handleSubmit}" id="upload">
 
-		<div class="container">
-
-			{#each progress as prog} 
-				<div class="progress">
-					<div class="progress-bar progress-bar-striped bg-{prog.status}" class:progress-bar-animated="{prog.progress < 100}"
-					role="progressbar" style="width: {prog.progress}%">
-						{prog.name}
-					</div>
-				</div>
-			{/each}
-			
-			<br/>
-
-			<form class="input-group mb-3" on:submit|preventDefault="{handleSubmit}">
-				<div class="custom-file">
-					<input type="hidden" name="path" value="{path}" />
-					<input type="file" multiple name="files" class="custom-file-input" on:change="{updateFileNames}">
-					<label class="custom-file-label">{fileNames ? fileNames : 'Choose file'}</label>
-				</div>
-				<div class="input-group-append">
-					<button type="submit" class="btn btn-primary">Upload</button>
-				</div>
-			</form>
-
-		</div>
-
+	<div class="mdl-card__title mdl-card--expand">
+		<h2 class="mdl-card__title-text">Upload</h2>
 	</div>
-</div>
+
+	<div class="mdl-card__supporting-text">
+		Upload to: <strong>{path}</strong><br/>
+		
+		<div class="custom-file">
+			<input type="hidden" name="path" value="{path}" />
+			
+			<input id="file" type="file" multiple name="files" on:change="{updateFileNames}">
+			<label for="file" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+				<i class="material-icons">add</i>
+			</label>			
+		</div>
+		
+		<ul class="demo-list-item mdl-list">
+			{#each progress as prog} 
+				<li>
+					<div class="mdl-list__item"><div class="mdl-list__item-primary-content">
+						{prog.name}
+					</div></div>
+					
+					<div class="progress" style="width:100%">
+						<span class="progress-status" style="width: {prog.progress}%">&nbsp;</span>
+					</div>
+					
+					<br/>
+				</li>
+			{/each}
+		</ul>
+		
+	</div>
+
+	<div class="mdl-card__actions mdl-card--border">			
+		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+			Upload
+		</button>
+	</div>
+
+	<div class="mdl-card__menu">
+		<button on:click|preventDefault="{() => show = false}" class="mdl-button mdl-js-button mdl-button--icon mdl-button-right">
+			<i class="material-icons">close</i>
+		</button>
+	</div>
+</form>

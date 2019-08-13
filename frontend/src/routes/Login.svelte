@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
 	import {push, pop, replace} from 'svelte-spa-router'
 	import API from '../util/api.js';
 	
@@ -8,8 +9,14 @@
 	let userPromise;
 	let message;
 	
+	onMount(() => {
+		// Have Material Design Lite register the buttons so it can show the ripple effect
+		componentHandler.upgradeElement(document.getElementById("username"))
+		componentHandler.upgradeElement(document.getElementById("password"))
+	});
+	
 	const login = function(username, password) {
-		const token = btoa(username+":"+password);
+		const token = btoa(username+":"+sha512(password));
 		const api = new API(token);
 		
 		userPromise = api.getUser();
@@ -31,6 +38,11 @@
 		width: 50%;
 		padding: 10px;
 	}
+	
+	.logo {
+		max-width: 100%;
+		max-height: 5em;
+	}
 </style>
 
 <!-- Fork me on GitHub -->
@@ -38,27 +50,27 @@
 
 <div class="center mdl-card mdl-shadow--2dp">
   <div class="mdl-card__title">
-	<img src="img/logo.png" alt="FileFucktory" width="300">
+	<img src="img/logo.png" alt="FileFucktory" class="logo">
   </div>
   <form class="col-sm form-group" on:submit|preventDefault="{(event) => {login(event.currentTarget.username.value, event.currentTarget.password.value)}}">
 	<div class="mdl-card__supporting-text">
-	<h2 class="mdl-card__title-text">Login</h2>
-    {#if message}<Alert title="Error while logging in." {message} />{/if}
+		<h2 class="mdl-card__title-text">Login</h2>
+		{#if message}<Alert title="Error while logging in." {message} />{/if}
 
-	{#if userPromise}
-		{#await userPromise}
-			<div class="mdl-spinner mdl-js-spinner is-active"></div>
-		{/await}
-	{/if}
+		{#if userPromise}
+			{#await userPromise}
+				<div class="mdl-spinner mdl-js-spinner is-active"></div>
+			{/await}
+		{/if}
 		
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input class="mdl-textfield__input" type="text" name="username" placeholder="Username"/>
-			<label class="mdl-textfield__label" for="sample3">Username</label>
+			<input class="mdl-textfield__input" type="text" name="username" id="username" />
+			<label class="mdl-textfield__label" for="username">Username</label>
 		</div>
 		
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input class="mdl-textfield__input" type="password" name="password" placeholder="Password"/>
-			<label class="mdl-textfield__label" for="sample3">Password</label>
+			<input class="mdl-textfield__input" type="password" name="password" id="password" />
+			<label class="mdl-textfield__label" for="password">Password</label>
 		</div>
 		
 	</div>

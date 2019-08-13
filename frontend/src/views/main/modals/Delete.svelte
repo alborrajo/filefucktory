@@ -9,9 +9,7 @@
 	
 	onMount(() => {
 		// Have Material Design Lite register the buttons so it can show the ripple effect
-		document.querySelectorAll(".mdl-js-button").forEach(
-			node => componentHandler.upgradeElement(node)
-		);
+		componentHandler.upgradeElements(document.getElementById("delete"))
 	});
 
 	function handleSubmit(event) {
@@ -29,7 +27,7 @@
 </style>
 
 <!-- delete -->
-<form class="mdl-card mdl-card-wide mdl-shadow--2dp" class:hidden="{!show}" on:submit|preventDefault="{handleSubmit}">
+<form class="mdl-card mdl-card-wide mdl-shadow--2dp" class:hidden="{!show}" on:submit|preventDefault="{handleSubmit}" id="delete">
 
 	<div class="mdl-card__title mdl-card--expand">
 		<h2 class="mdl-card__title-text">Remove</h2>

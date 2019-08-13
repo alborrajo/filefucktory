@@ -39,7 +39,7 @@
 
 
 <div class="mdl-card mdl-card-full mdl-shadow--2dp">
-  <div class="mdl-card__title mdl-card--expand"/>
+	<div class="mdl-card__title mdl-card--expand"/>
 	<div class="mdl-card__actions">
 		{#if file.contents !== undefined}
 			<a href="#/{path}/{file.name}">

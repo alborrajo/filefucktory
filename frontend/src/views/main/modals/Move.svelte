@@ -1,24 +1,17 @@
 <script>
+	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
-	
-	import MoveFolderTree from './move/MoveFolderTree.svelte';
-
-	export let path;
-	export let folder;
 
 	export let from = "";
-	let to = "";
+	export let to = "";
 
 	export let show = null;
-	$: {
-		//jQuery('#moveModal').modal(show ? 'show' : 'hide');
-		show = null;
-	}
 	
-	const setTo = (event) => {
-		to = event.detail.chosen;
-	}
+	onMount(() => {
+		// Have Material Design Lite register the buttons so it can show the ripple effect
+		componentHandler.upgradeElements(document.getElementById("move"))
+	});
 
 	const handleSubmit = (event) => {
 		dispatch('submit', {
@@ -29,23 +22,37 @@
 
 </script>
 
-<!-- mkdir -->
-<div class="modal fade" id="moveModal" tabindex="-1" >
-	<div class="modal-content modal-dialog">
-		<div class="modal-header">
-			<h5>Move {from.split('\\').pop().split('/').pop()}</h5>
-		</div>
-		<div class="modal-body input-group">
-			<MoveFolderTree rootDir=true {path} {folder} currentChosenPath={to} on:chosen={setTo}/>
-		</div>
-		<div class="modal-footer">
-			<form on:submit|preventDefault="{handleSubmit}">
-				<input type="hidden" name="from" value="{from}"/>
-				<input type="hidden" name="to" value="{to}"/>
-				
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-warning">Set</button>
-			</form>
-		</div>
+<style>
+	.mdl-card-wide {
+		width: 100%;
+	}
+</style>
+
+<!-- move -->
+<form class="mdl-card mdl-card-wide mdl-shadow--2dp" class:hidden="{!show}" on:submit|preventDefault="{handleSubmit}" id="move">
+
+	<div class="mdl-card__title mdl-card--expand">
+		<h2 class="mdl-card__title-text">Move {from.split('\\').pop().split('/').pop()}</h2>
 	</div>
-</div>
+
+	<div class="mdl-card__supporting-text">
+		Move <strong>{from.split('\\').pop().split('/').pop()}</strong> to <strong>{to.split('\\').pop().split('/').pop()}</strong>
+	</div>
+
+	<div class="mdl-card__actions mdl-card--border">
+		<form on:submit|preventDefault="{handleSubmit}">
+			<input type="hidden" name="from" value="{from}"/>
+			<input type="hidden" name="to" value="{to}"/>
+			
+			<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+				Move
+			</button>
+		</form>
+	</div>
+
+	<div class="mdl-card__menu">
+		<button on:click|preventDefault="{() => show = false}" class="mdl-button mdl-js-button mdl-button--icon mdl-button-right">
+			<i class="material-icons">close</i>
+		</button>
+	</div>
+</form>
