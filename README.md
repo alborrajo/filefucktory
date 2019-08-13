@@ -1,7 +1,7 @@
 # FileFucktory
 ### Barebones cloud storage
 
-Made as a project to learn how to develop webpages
+Made as a project to learn how to develop webapps
 
 It can be tried in http://filefucktory.ga/ (Requires invitation to join)
 
