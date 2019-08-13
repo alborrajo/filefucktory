@@ -196,6 +196,32 @@ class API {
 			xhr.send(file);
 		});
 	}
+	
+	getDownloadToken(path) {
+		return new Promise((resolve, reject) => {
+			// Create URL with query parameters
+			let target = "rest/files/"+path;
+			target += '?';
+			target += new URLSearchParams({
+				getToken: null
+			}).toString();
+			
+			const xhr = new XMLHttpRequest();
+			xhr.open("GET", target);
+			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.setRequestHeader("Content-Type", "application/json");
+						
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					if(xhr.status === 200) {resolve(JSON.parse(xhr.responseText));}
+					else {reject(xhr.responseText);}
+				}
+			}
+			
+			xhr.send(file);
+		});
+	}
 
 }
 

@@ -97,7 +97,7 @@
 	<div class="mdl-grid">
 		{#each folder.contents as file (file.name)}
 			<div class="mdl-cell mdl-cell--2-col">
-				<File {path} {file} on:action />
+				<File {path} {file} isPublic={folder.public} on:action />
 			</div>
 		{/each}
 	</div>

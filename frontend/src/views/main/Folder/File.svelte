@@ -2,8 +2,17 @@
 	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	
+	// Create API object using the sessionStorage 'token' as the auth token
+	import API from '../../../util/api.js';
+	const token = sessionStorage.getItem('token');	
+	const api = new API(token);
+	
 	export let path;
 	export let file;
+	
+	// Inherir parameter from parent directory if the file/folder itself doesn't have a public parameter
+	export let isPublic;
+	if(file.public !== undefined) {isPublic = file.public}
 	
 	const dispatch = createEventDispatcher();
 	
@@ -12,6 +21,21 @@
 		componentHandler.upgradeElement(document.getElementById(md5(path+'/'+file.name)));
 		componentHandler.upgradeElement(document.getElementById(md5(path+'/'+file.name)+"menu"));
 	});
+	
+	async function tokenDownload(path) {
+		// Get a new temporary token to download the file without auth
+		//	This is done in order to avoid the browser's HTTP Basic Authentication dialog
+		const token = await api.getDownloadToken(path);
+
+		// Create URL with query parameters
+		let target = "rest/files/"+path;
+		target += '?';
+		target += new URLSearchParams({
+			token: token.token
+		}).toString();
+
+		window.open(target);
+	}
 	
 	function formatBytes(bytes, decimals=2) {
 		if (bytes === 0) return '0 B';
@@ -49,10 +73,17 @@
 				({formatBytes(file.size)})
 			</a>
 		{:else}
+			{#if isPublic}
 			<a href="rest/files/{path}/{file.name}">
 				<strong>{file.name}</strong><br/>
 				({formatBytes(file.size)})
 			</a>
+			{:else}
+			<a on:click="{() => tokenDownload(path+'/'+file.name)}">
+				<strong>{file.name}</strong><br/>
+				({formatBytes(file.size)})
+			</a>
+			{/if}
 		{/if}
 
 		<!-- Right aligned menu below button -->
