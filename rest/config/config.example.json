@@ -1,5 +1,5 @@
 {
-	"port": 6480,
+	"port": 80,
 	
 	"serveFrontend": true,
 	"restRoute": "/",

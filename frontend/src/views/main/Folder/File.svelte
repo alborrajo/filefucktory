@@ -28,7 +28,7 @@
 		const token = await api.getDownloadToken(path);
 
 		// Create URL with query parameters
-		let target = "rest/files/"+path;
+		let target = CONFIG.restRoute+"files/"+path;
 		target += '?';
 		target += new URLSearchParams({
 			token: token.token

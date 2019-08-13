@@ -26,7 +26,7 @@ const config = require('../../config/config.json')
 //	req.localPath:		userFolder path/to/file -> FilesFolder/userFolder/path/to/file
 //	req.userFolder:		userFolder path/to/file -> FilesFolder/userFolder/
 function setLocalPath(req, res, next) {
-	req.relLocalPath = decodeURIComponent(req.path); //path.normalize(req.params.userFolder+"/"+req.path);
+	req.relLocalPath = decodeURIComponent(req.path);
 	req.localPath = path.join(config.userFilesFolder, req.relLocalPath);	
 	req.userFolder = path.join(config.userFilesFolder, req.params.userFolder);
 	next();

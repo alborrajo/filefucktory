@@ -1,6 +1,9 @@
 ###########################
 # Filefucktory .gitignore #
 ###########################
+frontend/public/config/config.js
+rest/config/config.json
+
 rest/db/filefucktory.db
 rest/files/*
 
