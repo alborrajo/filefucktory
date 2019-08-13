@@ -1,12 +1,15 @@
 class API {
+	
 	constructor(token=null) {
 		this.token = token;
+		
+		this.restRoute = CONFIG.restRoute;
 	}	
 	
 	getInvite(inviteID) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("GET", "/rest/user/invites/"+inviteID);
+			xhr.open("GET", this.restRoute+"user/invites/"+inviteID);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -21,7 +24,7 @@ class API {
 	register(inviteID, username, password) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("POST", "/rest/user/invites/"+inviteID);
+			xhr.open("POST", this.restRoute+"user/invites/"+inviteID);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.setRequestHeader("Content-Type", "application/json");
 			xhr.onreadystatechange = function() {
@@ -42,7 +45,7 @@ class API {
 	getUser() {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("GET", "/rest/user");
+			xhr.open("GET", this.restRoute+"user");
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.onreadystatechange = function() {
@@ -58,7 +61,7 @@ class API {
 	getInvites() {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("GET", "/rest/user/invites");
+			xhr.open("GET", this.restRoute+"user/invites");
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.onreadystatechange = function() {
@@ -74,7 +77,7 @@ class API {
 	addInvite() {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("POST", "/rest/user/invites");
+			xhr.open("POST", this.restRoute+"user/invites");
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.onreadystatechange = function() {
@@ -90,7 +93,7 @@ class API {
 	getFolder(folder) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("GET", "/rest/files/"+folder+"/");
+			xhr.open("GET", this.restRoute+"files/"+folder+"/");
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.onreadystatechange = function() {
@@ -106,7 +109,7 @@ class API {
 	mkdir(folder, folderName, setPublic) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("PUT", "/rest/files/"+folder+"/");
+			xhr.open("PUT", this.restRoute+"files/"+folder+"/");
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("Content-Type", "application/json");
 			xhr.onreadystatechange = function() {
@@ -125,7 +128,7 @@ class API {
 	rm(path) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("DELETE", "/rest/files/"+path);
+			xhr.open("DELETE", this.restRoute+"files/"+path);
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.onreadystatechange = function() {
@@ -141,7 +144,7 @@ class API {
 	setPublic(path, setPublicValue) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("PUT", "/rest/files/"+path);
+			xhr.open("PUT", this.restRoute+"files/"+path);
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.setRequestHeader("Content-Type", "application/json");
@@ -160,7 +163,7 @@ class API {
 	move(from, to) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("PUT", "/rest/files/"+from);
+			xhr.open("PUT", this.restRoute+"files/"+from);
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.setRequestHeader("Content-Type", "application/json");
@@ -179,7 +182,7 @@ class API {
 	upload(path, file, onprogress=undefined) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
-			xhr.open("POST", "rest/files/"+path);
+			xhr.open("POST", this.restRoute+"files/"+path);
 			xhr.setRequestHeader('Authorization', 'Basic '+this.token);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			xhr.setRequestHeader("Content-Type", "application/octet-stream");
@@ -200,7 +203,7 @@ class API {
 	getDownloadToken(path) {
 		return new Promise((resolve, reject) => {
 			// Create URL with query parameters
-			let target = "rest/files/"+path;
+			let target = this.restRoute+"files/"+path;
 			target += '?';
 			target += new URLSearchParams({
 				getToken: null

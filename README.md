@@ -17,26 +17,40 @@ It can be tried in http://filefucktory.ga/ (Requires invitation to join)
 
 - Client-side and server-side password hashing
 
+- Public and private folders
+
 ##### Installation
 
 ###### Requires
 
-- Web server (Tested with Apache)
+- Node
 
-- PHP
+- NPM
 
 ###### How to install
 
 - Clone repo
 
-- Make a **files** folder and give your web server permission to use it
+- Make a new SQLite database (```db/filefucktory.db```, for example) and import ```db/ddl.sql``` into it.
 
-- Enable site on your web server configuration
+- Add a new user to the database using the ```useradd.js``` script, providing the database, username, and password
 
-	- Max file upload size should be specified in PHP configuration
+	- ```node ./useradd.js filefucktory.db username password```
+	
+- Make a folder to store the users' files (```rest/files/``` for example)
 
-- The default configuration at ```config.json``` is valid for most cases, but it can be modified to match your preferences
+- Configure ```rest/config/config.json``` to your liking. The default configuration is valid for most cases
+
+	- If you change ```restRoute```, don't forget to change it on ```frontend/public/config/config.js``` as well.
+
+TODO: How to run the app
 
 ###### Upgrading from previous versions
 
-Since newer versions don't use **mongodb** anymore, if you want to upgrade from a version that used mongodb, you'll have to run the script ```utils/mongo2json.sh``` and copy the output file to ```config/users.json``` 
+Previous versions used PHP and a ```JSON``` file to store user data, to migrate from that file to the newer version, which uses SQLite,
+run the script ````rest/db/json2sql.js``` providing the JSON and the DB files to be accessed
+
+```
+# For example:
+node ./json2sql.js users.json filefucktory.db
+```

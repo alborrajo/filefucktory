@@ -74,7 +74,7 @@
 			</a>
 		{:else}
 			{#if isPublic}
-			<a href="rest/files/{path}/{file.name}">
+			<a href="{CONFIG.restRoute+'files/'+path+'/'+file.name}">
 				<strong>{file.name}</strong><br/>
 				({formatBytes(file.size)})
 			</a>

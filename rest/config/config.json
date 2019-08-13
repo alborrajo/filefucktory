@@ -2,7 +2,7 @@
 	"port": 6480,
 	
 	"serveFrontend": true,
-	"restRoute": "/rest",
+	"restRoute": "/",
 	
 	"database": "./db/filefucktory.db",
 	"userFilesFolder": "./files",
