@@ -114,15 +114,17 @@ router.put('/:userFolder/\*', express.json(), setLocalPath, privateFileAuth,
 			else {
 				// If there's name in the body of the request, CREATE NEW FOLDER
 				if(req.body.name) {
+					
 					// Check if the path isn't inside the user folder, and if so, throw exception to avoid unsafe relative operations
-					if(!pathIsInside(req.body.name, req.userFolder)) {return res.status(400).send();}
+					const pathToMake = path.join(pathToSet,req.body.name);
+					if(!pathIsInside(pathToMake, req.userFolder)) {return res.status(400).send();}
 					
 					// BAD REQUEST if the folder already exists
-					if(await fsutils.exists(path.join(req.localPath, req.body.name))) {
+					if(await fsutils.exists(pathToMake)) {
 						return res.status(400).send();
 					}
 					
-					await fsutils.mkdir(req.localPath, req.body.name)
+					await fsutils.mkdir(pathToMake)
 					
 					// Set the newly created folder as the path to set as public or private
 					pathToSet = req.localPath + req.body.name;

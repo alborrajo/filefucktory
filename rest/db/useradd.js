@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const sha512 = require('js-sha512');
 
 // Arguments:
 if(process.argv.length < 5) {
@@ -26,7 +27,7 @@ const db = new sqlite3.Database(
 const folder = crypto.randomBytes(16).toString("hex");	
 			
 // Hash password
-const hashedPassword = bcrypt.hashSync(password, 10);
+const hashedPassword = bcrypt.hashSync(sha512(password), 10);
 
 db.run(
 	"INSERT INTO User(username, password, folder) VALUES(?, ?, ?);",
