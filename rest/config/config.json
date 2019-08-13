@@ -9,5 +9,8 @@
 	"maxFileSize": "1gb",
 	
 	"defaultMaxSpace": 1073742000,
-	"defaultMaxInvites": 10
+	"defaultMaxInvites": 10,
+	
+	"tokenDeleteAfterUse": true,
+	"tokenExpirationTime": 300000
 }

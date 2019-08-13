@@ -9,6 +9,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const pathIsInside = require("path-is-inside");
 
+const crypto = require('crypto');
+
 const { publicFileAuth, privateFileAuth } = require('../db/auth.js');
 
 const fsutils = require ('./fsutils.js');
@@ -31,13 +33,72 @@ function setLocalPath(req, res, next) {
 }
 
 
+// Temporary token stuff:
+const fileTokens = [];
+
+// Retrieve the contents of a file by using a temporary token
+router.get('/:userFolder/\*', setLocalPath,
+	async (req, res, next) => {
+		try {
+			// If it's public, next (No need for temporary tokens on public files)
+			if(await fsutils.isPublic(req.localPath)) {return next();}
+			
+			// If it's a DIRECTORY, next
+			if(await fsutils.isDirectory(req.localPath)) {return next();}
+			
+			// If no token parameter, next
+			if(req.query.token === undefined) {return next();}
+			
+			// If invalid token or token for a different path, 403
+			if(fileTokens[req.query.token] !== req.localPath) {res.status(403).send();}
+			
+			
+			// ---- TOKEN IS VALID ----
+			
+			// Delete the token to avoid it being used multiple times	
+			if(config.tokenDeleteAfterUse) {delete fileTokens[req.query.token];}
+			
+			// Serve file if the token is valid 
+			return res.sendFile(req.relLocalPath, {root: config.userFilesFolder});
+		} catch(err) {
+			next(err);
+		}
+	}
+);		
+
+// Get a temporary token for a file
+//	This is used to avoid having to deal with the browser's HTTP Basic Auth pop up
+router.get('/:userFolder/\*', setLocalPath, publicFileAuth,
+	async (req, res, next) => {
+		try {
+			// If it's a DIRECTORY or there's no token in the request, next
+			if(await fsutils.isDirectory(req.localPath)) {return next();}
+			if(req.query.getToken === undefined) {return next();}
+			
+			// Generate and store new token
+			const newToken = crypto.randomBytes(16).toString("hex");
+			fileTokens[newToken] = req.localPath;
+			
+			// Delete token after the time specified in the configuration file
+			setTimeout(() => delete fileTokens[newToken], config.tokenExpirationTime);
+						
+			// Send back the newly generated token
+			return res.json({
+				token: newToken
+			});
+		} catch(err) {
+			return next(err);
+		}
+	}
+);
+
 
 // Retrieves metadata about a directory OR the contents of a file
 //	If the query path points to a DIRECTORY, the response sends an object containing
 //		its name, size, contents (recursive) and whether it's public or not
 //	If the query path points to a FILE, the response will be the contents of the
 //		file
-router.get('/:userFolder/\*', express.json(), setLocalPath, publicFileAuth,
+router.get('/:userFolder/\*', setLocalPath, publicFileAuth,
 	async (req, res, next) => {
 		try {
 			// If it's a DIRECTORY

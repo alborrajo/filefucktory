@@ -85,6 +85,14 @@
 |        |                      |                           |                               |                                              |                                  |
 |        |                      |                           |                               | 401: {}                                      |                     Invalid auth |
 +--------+----------------------+---------------------------+-------------------------------+----------------------------------------------+----------------------------------+
+| GET    | /files/:folder/:file |                           | User auth if public === false | 200: {"token": temporary token }			   | Generates a temporary token to   |
+|        |  ?getToken           |                           |                               |                                              | download a file without auth     |
+|        |                      |                           |                               | 401: {}                                      |                     Invalid auth |
++--------+----------------------+---------------------------+-------------------------------+----------------------------------------------+----------------------------------+
+| GET    | /files/:folder/:file |                           |                               | 200: File data                 			   |                       Sends file |
+|        |  ?token=Token        |                           |                               |                                              |                                  |
+|        |                      |                           |                               | 403: {}                                      |                    Invalid token |
++--------+----------------------+---------------------------+-------------------------------+----------------------------------------------+----------------------------------+
 | PUT    | /files/:folderOrFile | {"moveTo":path to move to}| User auth                     | 204: {}                                      | Moves file or folder from "from" |
 |        |                      |                           |                               |                                              | to the folder specified in "to"  |
 |        |                      |                           |                               | 401: {}                                      |                     Invalid auth |
