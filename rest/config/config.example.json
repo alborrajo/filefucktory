@@ -1,0 +1,16 @@
+{
+	"port": 80,
+	
+	"serveFrontend": true,
+	"restRoute": "/",
+	
+	"database": "./db/filefucktory.db",
+	"userFilesFolder": "./files",
+	"maxFileSize": "1gb",
+	
+	"defaultMaxSpace": 1073742000,
+	"defaultMaxInvites": 10,
+	
+	"tokenDeleteAfterUse": true,
+	"tokenExpirationTime": 300000
+}
