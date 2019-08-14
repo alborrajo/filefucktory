@@ -1,5 +1,6 @@
 {
 	"port": 80,
+	"trustProxy": false,
 	
 	"serveFrontend": true,
 	"restRoute": "/",

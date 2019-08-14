@@ -48,9 +48,13 @@ router.get('/:userFolder/\*', setLocalPath,
 			
 			// If no token parameter, next
 			if(req.query.token === undefined) {return next();}
-			
-			// If invalid token or token for a different path, 403
-			if(fileTokens[req.query.token] !== req.localPath) {res.status(403).send();}
+
+			// If invalid token, token for a different path or for a different IP, 403
+			if(fileTokens[req.query.token] == null
+			|| fileTokens[req.query.token].path !== req.localPath 
+			|| fileTokens[req.query.token].ip !== req.ip) {
+				return res.status(403).send();
+			}
 			
 			
 			// ---- TOKEN IS VALID ----
@@ -61,7 +65,7 @@ router.get('/:userFolder/\*', setLocalPath,
 			// Serve file if the token is valid 
 			return res.sendFile(req.relLocalPath, {root: config.userFilesFolder});
 		} catch(err) {
-			next(err);
+			return next(err);
 		}
 	}
 );		

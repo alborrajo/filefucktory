@@ -9,8 +9,17 @@ const app = express()
 // Configuration file
 const config = require('./config/config.json')
 
+// Security
+const helmet = require('helmet');
+app.use(helmet());
+
 // ROUTER
 app.use(config.restRoute, require('./src/rootRouter.js'));
+
+// Proxy
+if(config.trustProxy) {
+	app.enable('trust proxy');
+}
 
 // Frontend
 if(config.serveFrontend) {
