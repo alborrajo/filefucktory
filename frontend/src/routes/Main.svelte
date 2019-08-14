@@ -38,10 +38,11 @@
 			
 	let message;
 
-	
+	let paramsPath = decodeURIComponent(params.wild);
 	$: {
 		if(params.wild != null) {
-			updateFolder(params.wild);
+			paramsPath = decodeURIComponent(params.wild);
+			updateFolder(paramsPath);
 		}
 		else{
 			userPromise.then((userData) => {
@@ -97,7 +98,7 @@
 			
 		try {
 			await api.mkdir(path, dirName, setPublic);
-			updateFolder(params.wild);
+			updateFolder(paramsPath);
 			
 			mkdirProps.show = false;
 			message = null;
@@ -108,11 +109,12 @@
 	}
 	
 	async function handleDelete(event) {
+	
 		const path = event.detail.path;	
 		
 		try {
 			await api.rm(path);
-			updateFolder(params.wild);
+			updateFolder(paramsPath);
 			
 			deleteProps.show = false;
 			message = null;
@@ -128,7 +130,7 @@
 		
 		try {
 			await api.setPublic(path, setPublic);
-			updateFolder(params.wild);
+			updateFolder(paramsPath);
 			
 			publicProps.show = false;
 			message = null;
@@ -144,7 +146,7 @@
 		
 		try {
 			await api.move(from, to);
-			updateFolder(params.wild);
+			updateFolder(paramsPath);
 			moveProps.show = false;
 			message = null;
 		}
@@ -174,7 +176,7 @@
 			api.upload(path+"/"+files[i].name, files[i], onprogress)
 				.then(() => uploadProps.progress[i].status = "success") // After upload (success)
 				.catch(() => uploadProps.progress[i].status = "danger") // After upload (error)
-				.finally(() => updateFolder(params.wild))
+				.finally(() => updateFolder(paramsPath))
 		}
 		
 		message = null;		
@@ -192,17 +194,17 @@
 	{#if folder}
 		{#if params.wild} <!-- Avoid sending a null params.wild -->
 			<Layout>
-				<div slot="drawer"><FolderDrawer rootDir={params.wild == user.folder} {folder} path={params.wild} /></div>
+				<div slot="drawer"><FolderDrawer rootDir={params.wild == user.folder} {folder} path={paramsPath} /></div>
 				
 				<div slot="content">
-					<FolderContent rootDir={params.wild == user.folder} {folder} path={params.wild} {user} on:action="{handleActionButtons}">
+					<FolderContent rootDir={paramsPath == user.folder} {folder} path={paramsPath} {user} on:action="{handleActionButtons}">
 						{#if message}<Alert title="Error" {message} />{/if}
 						
 						<!-- Action dialogs -->
 						<Mkdir {...mkdirProps} on:submit="{handleMkdir}" />
 						<Public {...publicProps} on:submit="{handlePublic}" />
 						<Delete {...deleteProps} on:submit="{handleDelete}" />
-						<Move {...moveProps} to={params.wild} on:submit="{handleMove}" />
+						<Move {...moveProps} to={paramsPath} on:submit="{handleMove}" />
 						<Upload {...uploadProps} on:submit="{handleUpload}" />
 						
 					</FolderContent>

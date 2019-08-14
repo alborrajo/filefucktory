@@ -81,7 +81,10 @@ router.get('/:userFolder/\*', setLocalPath, publicFileAuth,
 			
 			// Generate and store new token
 			const newToken = crypto.randomBytes(16).toString("hex");
-			fileTokens[newToken] = req.localPath;
+			fileTokens[newToken] = {
+				path: 	req.localPath,
+				ip:		req.ip,
+			};
 			
 			// Delete token after the time specified in the configuration file
 			setTimeout(() => delete fileTokens[newToken], config.tokenExpirationTime);
